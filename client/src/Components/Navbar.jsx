@@ -58,10 +58,11 @@ const Navbar = ({sidebarToggle, setSidebarToggle}) => {
               className='z-10 absolute bg-white rounded-lg shadow w-32 top-full right-0'
             >
               <ul className='py-2 text-sm text-gray-950'>
-                <li><a href="#" className='block px-4 py-2 hover:bg-gray-200'>Profile</a></li>
-                <li><a href="#" className='block px-4 py-2 hover:bg-gray-200'>Settings</a></li>
-                <li><a href="#" className='block px-4 py-2 hover:bg-gray-200'>Log out</a></li>
-              </ul>
+  <li><a href="/profile" className='block px-4 py-2 hover:bg-gray-200'>Profile</a></li>
+  <li><a href="/settings" className='block px-4 py-2 hover:bg-gray-200'>Settings</a></li>
+  <li><a href="/logout" className='block px-4 py-2 hover:bg-gray-200'>Log out</a></li>
+</ul>
+
             </div>
           )}
         </div>
