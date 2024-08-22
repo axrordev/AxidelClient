@@ -2,7 +2,6 @@ import './index.css';
 import Dashboard from './Components/Dashboard';
 import Sidebar from './Components/Sidebar';
 import { useState } from 'react';
-import Navbar from './Components/Navbar';
 
 function App() {
 	const [sidebarToggle, setSidebarToggle] = useState(false)
