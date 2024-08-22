@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState, useEffect, useRef } from 'react';
 import { FaBars, FaSearch, FaUserCircle } from 'react-icons/fa';
 
@@ -70,16 +69,4 @@ const Navbar = ({sidebarToggle, setSidebarToggle}) => {
     </nav>
   );
 }
-
 export default Navbar;
-=======
-import React from 'react'
-
-const Navbar = () => {
-	return (
-		<div>Navbar</div>
-	)
-}
-
-export default Navbar 
->>>>>>> a81eee48cd041d920d23f99580395acb0113de80

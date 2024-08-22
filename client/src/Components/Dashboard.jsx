@@ -10,4 +10,4 @@ const Dashboard = ({sidebarToggle, setSidebarToggle}) => {
 	)
 }
 
-export default Dashboard
+export default Dashboard;
