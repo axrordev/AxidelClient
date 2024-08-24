@@ -109,13 +109,14 @@ const Navbar = ({ sidebarToggle, setSidebarToggle }) => {
   const handleSearch = async () => {
     if (query.trim() !== '') {
       try {
-        const response = await axios.get(`http://your-api-url/search?query=${encodeURIComponent(query)}`);
+        const response = await axios.get(`https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/search?query=${encodeURIComponent(query)}`);
         setResults(response.data);
       } catch (error) {
         console.error('Error fetching search results:', error);
       }
     }
-  };
+};
+
 
   // Handle enter key press in the input field
   const handleKeyPress = (e) => {
