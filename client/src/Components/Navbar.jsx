@@ -78,19 +78,23 @@ import axios from 'axios';
 
 const Navbar = ({ sidebarToggle, setSidebarToggle }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const dropdownRef = useRef(null); // Dropdownni referensiyasini saqlash
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState([]);
+  const dropdownRef = useRef(null);
+  const resultsRef = useRef(null);
 
-  // Dropdownni ochish va yopish uchun handler
+  // Dropdown toggle handler
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  // Klik orqali dropdownni yopish uchun handler
+  // Close dropdown when clicking outside
   const handleClickOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setIsDropdownOpen(false);
+    }
+    if (resultsRef.current && !resultsRef.current.contains(event.target)) {
+      setResults([]);
     }
   };
 
@@ -101,80 +105,79 @@ const Navbar = ({ sidebarToggle, setSidebarToggle }) => {
     };
   }, []);
 
-  // Search funksiyasi
+  // Handle search button click or enter key press
   const handleSearch = async () => {
-    if (searchTerm.trim() === '') return; // Agar qidirish termi bo'sh bo'lsa hech narsa qilmang
+    if (query.trim() !== '') {
+      try {
+        const response = await axios.get(`http://your-api-url/search?query=${encodeURIComponent(query)}`);
+        setResults(response.data);
+      } catch (error) {
+        console.error('Error fetching search results:', error);
+      }
+    }
+  };
 
-    try {
-      // Qidiruv natijalarini olish
-      const response = await axios.get(`/api/search/items?searchTerm=${searchTerm}`);
-      setSearchResults(response.data); // Natijalarni holatga saqlash
-    } catch (error) {
-      console.error('Error fetching search results:', error);
+  // Handle enter key press in the input field
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
     }
   };
 
   return (
-    <nav className='bg-gray-800 px-4 py-3 flex justify-between'>
-      <div className='flex items-center text-xl'>
-        <FaBars className='text-white me-4 cursor-pointer' onClick={() => setSidebarToggle(!sidebarToggle)} />
-        <span className='text-white font-semibold'>Axidel</span>
+    <nav className="bg-gray-800 px-4 py-3 flex justify-between">
+      <div className="flex items-center text-xl">
+        <FaBars className="text-white me-4 cursor-pointer" onClick={() => setSidebarToggle(!sidebarToggle)} />
+        <span className="text-white font-semibold">Axidel</span>
       </div>
 
-      <div className='flex items-center gap-x-5'>
-        <div className='relative md:w-65'>
-          <span className='relative md:absolute inset-y-0 left-0 flex items-center pl-2'>
-            <button
-              className='p-1 focus:outline-none text-white md:text-black'
-              onClick={handleSearch} // Qidiruv tugmasi bosilganda
-            >
+      <div className="flex items-center gap-x-5">
+        <div className="relative md:w-65">
+          <span className="relative md:absolute inset-y-0 left-0 flex items-center pl-2">
+            <button className="p-1 focus:outline-none text-white md:text-black" onClick={handleSearch}>
               <FaSearch />
             </button>
           </span>
           <input
             type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className='w-full px-4 py-1 pl-12 rounded shadow outline-none hidden md:block'
-            placeholder='Search...'
+            className="w-full px-4 py-1 pl-12 rounded shadow outline-none hidden md:block"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder="Search for items or collections..."
           />
+          {/* Search Results */}
+          {results.length > 0 && (
+            <div ref={resultsRef} className="absolute bg-white w-full rounded-lg shadow top-full left-0 mt-2 z-20">
+              <ul className="py-2 text-sm text-gray-950">
+                {results.map((result) => (
+                  <li key={result.id}>
+                    <a href={result.url} className="block px-4 py-2 hover:bg-gray-200">
+                      {result.ResultType === 'Item' ? result.ItemName : result.CollectionName}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
 
-        <div className='relative'>
-          <button
-            className='text-white focus:outline-none'
-            onClick={toggleDropdown} // Click hodisasi
-          >
-            <FaUserCircle className='w-6 h-6 mt-1' />
+        <div className="relative">
+          <button className="text-white focus:outline-none" onClick={toggleDropdown}>
+            <FaUserCircle className="w-6 h-6 mt-1" />
           </button>
-          {/* Dropdown menyu ko'rsatish */}
+
           {isDropdownOpen && (
-            <div
-              ref={dropdownRef} // Dropdownni referensiyasini qo'shish
-              className='z-10 absolute bg-white rounded-lg shadow w-32 top-full right-0'
-            >
-              <ul className='py-2 text-sm text-gray-950'>
-                <li><a href="/profile" className='block px-4 py-2 hover:bg-gray-200'>Profile</a></li>
-                <li><a href="/settings" className='block px-4 py-2 hover:bg-gray-200'>Settings</a></li>
-                <li><a href="/logout" className='block px-4 py-2 hover:bg-gray-200'>Log out</a></li>
+            <div ref={dropdownRef} className="z-10 absolute bg-white rounded-lg shadow w-32 top-full right-0">
+              <ul className="py-2 text-sm text-gray-950">
+                <li><a href="/profile" className="block px-4 py-2 hover:bg-gray-200">Profile</a></li>
+                <li><a href="/settings" className="block px-4 py-2 hover:bg-gray-200">Settings</a></li>
+                <li><a href="/logout" className="block px-4 py-2 hover:bg-gray-200">Log out</a></li>
               </ul>
             </div>
           )}
         </div>
       </div>
-
-      {/* Qidiruv natijalari */}
-      {searchResults.length > 0 && (
-        <div className='absolute bg-white rounded-lg shadow w-64 top-full right-0 mt-2'>
-          <ul className='py-2 text-sm text-gray-950'>
-            {searchResults.map(item => (
-              <li key={item.id} className='border-b last:border-b-0'>
-                <a href={`/items/${item.id}`} className='block px-4 py-2 hover:bg-gray-200'>{item.name}</a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
     </nav>
   );
 };
