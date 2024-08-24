@@ -111,6 +111,7 @@ const Navbar = ({ sidebarToggle, setSidebarToggle }) => {
 			try {
 				const response = await axios.get(`https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/search?query=${encodeURIComponent(query)}`);
 				setResults(response.data);
+				console.log(response.data)
 			} catch (error) {
 				if (error.response) {
 					// Server responded with a status code outside 2xx
