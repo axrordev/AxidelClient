@@ -106,16 +106,28 @@ const Navbar = ({ sidebarToggle, setSidebarToggle }) => {
   }, []);
 
   // Handle search button click or enter key press
-  const handleSearch = async () => {
-    if (query.trim() !== '') {
-      try {
-        const response = await axios.get(`https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/search?query=${encodeURIComponent(query)}`);
-        setResults(response.data);
-      } catch (error) {
-        console.error('Error fetching search results:', error);
-      }
-    }
-};
+	const handleSearch = async () => {
+		if (query.trim() !== '') {
+			try {
+				const response = await axios.get(`https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/search?query=${encodeURIComponent(query)}`);
+				setResults(response.data);
+			} catch (error) {
+				if (error.response) {
+					// Server responded with a status code outside 2xx
+					console.error('Response Error:', error.response.data);
+					console.error('Status Code:', error.response.status);
+					console.error('Response Headers:', error.response.headers);
+				} else if (error.request) {
+					// Request was made but no response was received
+					console.error('Request Error:', error.request);
+				} else {
+					// Error setting up the request
+					console.error('Error Message:', error.message);
+				}
+			}
+		}
+	};
+	
 
 
   // Handle enter key press in the input field
