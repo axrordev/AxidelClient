@@ -1,6 +1,5 @@
 import React from 'react'
 import Navbar from './Navbar'
-import ThemeSwitcher from "./ThemeSwitcher";
 
 const Dashboard = () => {
 	return (

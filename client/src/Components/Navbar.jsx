@@ -19,7 +19,7 @@ const Navbar = () => {
 
   const toggleSearchVisibility = () => {
     setIsSearchVisible(!isSearchVisible);
-    if (isMobileMenuOpen) setIsMobileMenuOpen(false); // Search ochilganda mobile menu yopiladi
+    setIsMobileMenuOpen(false); // Search ochilganda mobile menu yopiladi
   };
 
   useEffect(() => {
@@ -56,7 +56,7 @@ const Navbar = () => {
             type="button"
             className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
             aria-controls="navbar-search"
-            aria-expanded={isSearchVisible}
+            aria-expanded={isMobileMenuOpen}
             onClick={toggleMobileMenu}
           >
             <span className="sr-only">Open main menu</span>
@@ -64,23 +64,23 @@ const Navbar = () => {
           </button>
         </div>
 
-        {/* Search input and ul elements in desktop size */}
-        <div
-          id="navbar-search"
-          className={`items-center justify-between w-full md:flex md:w-auto md:order-1 ${isSearchVisible || isMobileMenuOpen ? '' : 'hidden'} `}
-        >
-          <div className="relative mt-3 md:hidden">
-            <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-              <FaSearch className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" />
-            </div>
+        {/* Search input in mobile size */}
+        {isSearchVisible && (
+          <div className="relative md:hidden w-full mt-4">
             <input
               type="text"
-              id="search-navbar"
-              className="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              id="mobile-search-navbar"
+              className="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Search..."
             />
           </div>
+        )}
 
+        {/* ul elements in desktop and mobile size */}
+        <div
+          id="navbar-search"
+          className={`items-center justify-between w-full md:flex md:w-auto md:order-1 ${isMobileMenuOpen ? '' : 'hidden'}`}
+        >
           <ul className={`flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700 ${isSearchVisible ? 'hidden' : ''}`}>
             <li>
               <a
@@ -108,11 +108,10 @@ const Navbar = () => {
               </a>
             </li>
           </ul>
-
         </div>
 
         {/* Search input, Theme button, Log In button */}
-        <div className='flex md:order-2 '>
+        <div className='flex md:order-2'>
           {/* Search input in desktop size */}
           <div className="relative hidden md:block">
             <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -120,15 +119,13 @@ const Navbar = () => {
               <span className="sr-only">Search icon</span>
             </div>
 
-            <div>
-              <input
-                type="text"
-                id="search-navbar"
-                className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Search..."
-              />          
-            </div>
-          </div>		
+            <input
+              type="text"
+              id="search-navbar"
+              className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Search..."
+            />
+          </div>
 
           {/* Theme button in desktop size */}
           <button
@@ -159,14 +156,13 @@ const Navbar = () => {
           </button>
 
           {/* Log In button */}
-					<ul className="hidden md:block md:order-2  w-full pt-2 ps-10 text-sm">
-                <li>
-                  <a href="/signin" className="text-[15px] text-white bg-blue-500 hover:bg-blue-600 rounded-lg p-[10px]">
-                    Log In
-                  </a>
-                </li>
-        	</ul>
-
+          <ul className="hidden md:block md:order-2 w-full pt-2 ps-10 text-sm">
+            <li>
+              <a href="/signin" className="text-[15px] text-white bg-blue-500 hover:bg-blue-600 rounded-lg p-[10px]">
+                Log In
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
     </nav>
