@@ -1,17 +1,18 @@
-import './index.css';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Dashboard from './Components/Dashboard';
-import Sidebar from './Components/Sidebar';
-import { useState } from 'react';
+import SignUpPage from './Pages/SignUpPage';
+import SignInPage from './Pages/SignInPage'; 
 
-function App() {
-	const [sidebarToggle, setSidebarToggle] = useState(false)
+const App = () => {
   return (
-    <div className='flex'>
-			<Sidebar sidebarToggle={sidebarToggle}/>
-			<Dashboard sidebarToggle={sidebarToggle} 
-			setSidebarToggle={setSidebarToggle}/>
-		</div>
-  )
-}
-
+      <Router>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/signin" element={<SignInPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+        </Routes>
+      </Router>
+  );
+};
 export default App;

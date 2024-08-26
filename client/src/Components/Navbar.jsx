@@ -1,195 +1,172 @@
-/*import React, { useState, useEffect, useRef } from 'react';
-import { FaBars, FaSearch, FaUserCircle } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { FaBars, FaSearch } from 'react-icons/fa';
 
-const Navbar = ({sidebarToggle, setSidebarToggle}) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null); // Dropdownni referensiyasini saqlash
+const Navbar = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
 
-  // Dropdownni ochish va yopish uchun handler
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+    setIsSearchVisible(false); // FaBars bosilganda search input yashiriladi
   };
 
-  // Klik orqali dropdownni yopish uchun handler
-  const handleClickOutside = (event) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-      setIsDropdownOpen(false);
-    }
+  const toggleDarkMode = () => {
+    const newMode = !isDarkMode;
+    setIsDarkMode(newMode);
+    localStorage.setItem('darkMode', newMode);
+  };
+
+  const toggleSearchVisibility = () => {
+    setIsSearchVisible(!isSearchVisible);
+    if (isMobileMenuOpen) setIsMobileMenuOpen(false); // Search ochilganda mobile menu yopiladi
   };
 
   useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    const savedMode = localStorage.getItem('darkMode') === 'true';
+    setIsDarkMode(savedMode);
+    document.body.className = savedMode ? 'dark' : '';
   }, []);
 
+  useEffect(() => {
+    document.body.className = isDarkMode ? 'dark' : '';
+  }, [isDarkMode]);
+
   return (
-    <nav className='bg-gray-800 px-4 py-3 flex justify-between '>
-      <div className='flex items-center text-xl'>
-        <FaBars className='text-white me-4 cursor-pointer' onClick={() => setSidebarToggle(!sidebarToggle)}/>
-        <span className='text-white font-semibold'>Axidel</span>
-      </div>
+    <nav className={`bg-${isDarkMode ? 'gray-900' : 'white'} border-gray-200 dark:bg-gray-900 ${isDarkMode ? 'border-b-2 border-white' : ''}`}>
+      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+        <span className={`text-white self-center text-2xl font-semibold whitespace-nowrap`}>
+          Axidel
+        </span>
 
-      <div className='flex items-center gap-x-5'>
-        <div className='relative md:w-65'>
-          <span className='relative md:absolute inset-y-0 left-0 flex items-center pl-2'>
-            <button className='p-1 focus:outline-none text-white md:text-black'>
-              <FaSearch/>
-            </button>
-          </span>
-          <input
-            type="text"
-            className='w-full px-4 py-1 pl-12 rounded shadow outline-none hidden md:block'
-          />
-        </div>
-
-        <div className='relative'>
-          <button 
-            className='text-white focus:outline-none'
-            onClick={toggleDropdown} // Click hodisasi
+        {/* Search icon in mobile size */}
+        <div className="flex-1 flex items-center justify-end md:hidden">
+          <button
+            type="button"
+            aria-controls="navbar-search"
+            aria-expanded={isSearchVisible}
+            onClick={toggleSearchVisibility}
+            className="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 me-1"
           >
-            <FaUserCircle className='w-6 h-6 mt-1'/>
+            <FaSearch className="w-5 h-5" aria-hidden="true" />
+            <span className="sr-only">Search</span>
           </button>
           
-          {isDropdownOpen && (
-            <div
-              ref={dropdownRef} // Dropdownni referensiyasini qo'shish
-              className='z-10 absolute bg-white rounded-lg shadow w-32 top-full right-0'
-            >
-              <ul className='py-2 text-sm text-gray-950'>
-  <li><a href="/profile" className='block px-4 py-2 hover:bg-gray-200'>Profile</a></li>
-  <li><a href="/settings" className='block px-4 py-2 hover:bg-gray-200'>Settings</a></li>
-  <li><a href="/logout" className='block px-4 py-2 hover:bg-gray-200'>Log out</a></li>
-</ul>
-
-            </div>
-          )}
-        </div>
-      </div>
-    </nav>
-  );
-}
-export default Navbar;
-*/
-import React, { useState, useEffect, useRef } from 'react';
-import { FaBars, FaSearch, FaUserCircle } from 'react-icons/fa';
-import axios from 'axios';
-
-const Navbar = ({ sidebarToggle, setSidebarToggle }) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [query, setQuery] = useState('');
-  const [results, setResults] = useState([]);
-  const dropdownRef = useRef(null);
-  const resultsRef = useRef(null);
-
-  // Dropdown toggle handler
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
-  // Close dropdown when clicking outside
-  const handleClickOutside = (event) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-      setIsDropdownOpen(false);
-    }
-    if (resultsRef.current && !resultsRef.current.contains(event.target)) {
-      setResults([]);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  // Handle search button click or enter key press
-	const handleSearch = async () => {
-		if (query.trim() !== '') {
-			try {
-				const response = await axios.get(`https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/search?query=${encodeURIComponent(query)}`);
-				setResults(response.data);
-				console.log(response.data)
-			} catch (error) {
-				if (error.response) {
-					// Server responded with a status code outside 2xx
-					console.error('Response Error:', error.response.data);
-					console.error('Status Code:', error.response.status);
-					console.error('Response Headers:', error.response.headers);
-				} else if (error.request) {
-					// Request was made but no response was received
-					console.error('Request Error:', error.request);
-				} else {
-					// Error setting up the request
-					console.error('Error Message:', error.message);
-				}
-			}
-		}
-	};
-	
-
-
-  // Handle enter key press in the input field
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
-  };
-
-  return (
-    <nav className="bg-gray-800 px-4 py-3 flex justify-between">
-      <div className="flex items-center text-xl">
-        <FaBars className="text-white me-4 cursor-pointer" onClick={() => setSidebarToggle(!sidebarToggle)} />
-        <span className="text-white font-semibold">Axidel</span>
-      </div>
-
-      <div className="flex items-center gap-x-5">
-        <div className="relative md:w-65">
-          <span className="relative md:absolute inset-y-0 left-0 flex items-center pl-2">
-            <button className="p-1 focus:outline-none text-white md:text-black" onClick={handleSearch}>
-              <FaSearch />
-            </button>
-          </span>
-          <input
-            type="text"
-            className="w-full px-4 py-1 pl-12 rounded shadow outline-none hidden md:block"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Search for items or collections..."
-          />
-          {/* Search Results */}
-          {results.length > 0 && (
-            <div ref={resultsRef} className="absolute bg-white w-full rounded-lg shadow top-full left-0 mt-2 z-20">
-              <ul className="py-2 text-sm text-gray-950">
-                {results.map((result) => (
-                  <li key={result.id}>
-                    <a href={result.url} className="block px-4 py-2 hover:bg-gray-200">
-                      {result.ResultType === 'Item' ? result.ItemName : result.CollectionName}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <button
+            type="button"
+            className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+            aria-controls="navbar-search"
+            aria-expanded={isSearchVisible}
+            onClick={toggleMobileMenu}
+          >
+            <span className="sr-only">Open main menu</span>
+            <FaBars className="w-5 h-5" aria-hidden="true" />
+          </button>
         </div>
 
-        <div className="relative">
-          <button className="text-white focus:outline-none" onClick={toggleDropdown}>
-            <FaUserCircle className="w-6 h-6 mt-1" />
+        {/* Search input and ul elements in desktop size */}
+        <div
+          id="navbar-search"
+          className={`items-center justify-between w-full md:flex md:w-auto md:order-1 ${isSearchVisible || isMobileMenuOpen ? '' : 'hidden'} `}
+        >
+          <div className="relative mt-3 md:hidden">
+            <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+              <FaSearch className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" />
+            </div>
+            <input
+              type="text"
+              id="search-navbar"
+              className="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Search..."
+            />
+          </div>
+
+          <ul className={`flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700 ${isSearchVisible ? 'hidden' : ''}`}>
+            <li>
+              <a
+                href="#"
+                className={`block py-2 px-3 ${isDarkMode ? 'text-white' : 'text-gray-900'} bg-${isDarkMode ? 'blue-700' : 'white'} rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500`}
+                aria-current="page"
+              >
+                Home
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className={`block py-2 px-3 ${isDarkMode ? 'text-white' : 'text-gray-900'} rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
+              >
+                About
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className={`block py-2 px-3 ${isDarkMode ? 'text-white' : 'text-gray-900'} rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
+              >
+                Services
+              </a>
+            </li>
+          </ul>
+
+        </div>
+
+        {/* Search input, Theme button, Log In button */}
+        <div className='flex md:order-2 '>
+          {/* Search input in desktop size */}
+          <div className="relative hidden md:block">
+            <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+              <FaSearch className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" />
+              <span className="sr-only">Search icon</span>
+            </div>
+
+            <div>
+              <input
+                type="text"
+                id="search-navbar"
+                className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Search..."
+              />          
+            </div>
+          </div>		
+
+          {/* Theme button in desktop size */}
+          <button
+            type="button"
+            onClick={toggleDarkMode}
+            className="relative hidden md:block items-center p-2 ml-5 -mr-5 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+          >
+            <span className="sr-only">Toggle Dark Mode</span>
+            {isDarkMode ? (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M12 3v1m4.22 1.22l.78-.78M21 12h-1m-4.22 4.22l-.78.78M12 21v-1m-4.22-1.22l-.78-.78M3 12H2m4.22-4.22l-.78-.78M12 2a10 10 0 100 20 10 10 0 000-20z"
+                />
+              </svg>
+            ) : (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M20.354 15.354A9 9 0 018.647 3.647 9 9 0 1020.354 15.354z"
+                />
+              </svg>
+            )}
           </button>
 
-          {isDropdownOpen && (
-            <div ref={dropdownRef} className="z-10 absolute bg-white rounded-lg shadow w-32 top-full right-0">
-              <ul className="py-2 text-sm text-gray-950">
-                <li><a href="/profile" className="block px-4 py-2 hover:bg-gray-200">Profile</a></li>
-                <li><a href="/settings" className="block px-4 py-2 hover:bg-gray-200">Settings</a></li>
-                <li><a href="/logout" className="block px-4 py-2 hover:bg-gray-200">Log out</a></li>
-              </ul>
-            </div>
-          )}
+          {/* Log In button */}
+					<ul className="hidden md:block md:order-2  w-full pt-2 ps-10 text-sm">
+                <li>
+                  <a href="/signin" className="text-[15px] text-white bg-blue-500 hover:bg-blue-600 rounded-lg p-[10px]">
+                    Log In
+                  </a>
+                </li>
+        	</ul>
+
         </div>
       </div>
     </nav>

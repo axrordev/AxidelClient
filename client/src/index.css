@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities; 
+body.dark {
+  background-color: #111827; /* Qora rang */
+  color: #ffffff; /* Oq rang */
+}
+
+nav.dark {
+  background-color: #111827; /* Qora rang */
+  border-bottom: 2px solid #ffffff; /* Oq rangda border */
+}
+
+nav.dark a {
+  color: #ffffff; /* Oq rang */
+}
