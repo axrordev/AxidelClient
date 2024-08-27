@@ -7,6 +7,7 @@ const SignInPage = () => {
     email: '',
     password: '',
   });
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -16,10 +17,14 @@ const SignInPage = () => {
     });
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   const onSubmit = async (event) => {
     event.preventDefault();
 
-    try {
+		try {
       const response = await axios.post(
         'https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Accounts/login',
         {
@@ -38,7 +43,7 @@ const SignInPage = () => {
         console.log('Login successful:', response.data);
         // Save token to local storage or context
         localStorage.setItem('token', response.data.data.token);
-        navigate('/home'); // Navigate to home page or another route
+        navigate('/'); 
       }
     } catch (error) {
       console.error('Login failed:', error.response?.data || error.message);
@@ -52,7 +57,7 @@ const SignInPage = () => {
         <div className="bg-white w-5/6 md:w-3/4 lg:w-2/3 xl:w-[500px] 2xl:w-[550px] mt-8 mx-auto px-16 py-8 rounded-lg shadow-2xl">
           <h2 className="text-center text-2xl font-bold tracking-wide text-gray-800">Sign In</h2>
           <p className="text-center text-sm text-gray-600 mt-2">
-            Don't have an account? <Link to="/signup" className="text-blue-600 hover:text-blue-700 hover:underline">Sign up here</Link>
+            Don't have an account? <a href="/signup" className="text-blue-600 hover:text-blue-700 hover:underline">Sign up here</a>
           </p>
 
           <form className="my-4 text-sm" onSubmit={onSubmit}>
