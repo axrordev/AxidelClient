@@ -24,31 +24,29 @@ const SignInPage = () => {
   const onSubmit = async (event) => {
     event.preventDefault();
 		console.log(formData.email + formData.password)
+		
 		try {
 			const response = await axios.post(
-				'https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Accounts/login',{
-					email: formData.email,
-          password: formData.password
-				}
+					`https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Accounts/login?email=${encodeURIComponent(formData.email)}&password=${encodeURIComponent(formData.password)}`,
+					null, // No body data required for this request
+					{
+							headers: {
+									'Content-Type': 'application/json',
+									'Accept': '*/*'
+							}
+					}
+					
 			);
-	
 			if (response.status === 200) {
-				navigate('/register-verify');
-			} else {
-				alert('Sign in failed: ' + response.data.message);
-			}
-		} catch (error) {
-			if (error.response) {
-				// Serverdan xato xabar
-				alert('Error: ' + error.response.data.message || error.response.statusText);
-			} else if (error.request) {
-				// So‘rov yuborilgan, lekin javob olinmagan
-				alert('No response received: ' + error.message);
-			} else {
-				// So‘rovni sozlashdagi xatolik
-				alert('Error in setup: ' + error.message);
-			}
-		}
+        console.log('Login successful:', response.data);
+        // Save token to local storage or context
+        localStorage.setItem('token', response.data.data.token);
+        navigate('/'); // Navigate to home page or another route
+      }
+    } catch (error) {
+      console.error('Login failed:', error.response?.data || error.message);
+      alert('Login failed. Please check your credentials and try again.');
+    }
   };
 
   return (
