@@ -3,13 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const RegisterVerifyPage = () => {
-  const [email, setEmail] = useState('');
-  const [code, setCode] = useState('');
 	const [formData, setFormData] = useState({
     email: '',
     code: '',
   });
   const navigate = useNavigate();
+
+  const handleInputChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -48,8 +53,8 @@ const RegisterVerifyPage = () => {
                 id="email"
                 className="mt-2 p-2 border border-gray-300 focus:outline-none focus:ring-0 focus:border-gray-300 rounded text-sm text-gray-900"
                 placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={formData.email}
+                onChange={handleInputChange}
               />
             </div>
 
@@ -62,8 +67,8 @@ const RegisterVerifyPage = () => {
                 id="code"
                 className="mt-2 p-2 border border-gray-300 focus:outline-none focus:ring-0 focus:border-gray-300 rounded text-sm text-gray-900"
                 placeholder="Enter the verification code"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
+                value={formData.code}
+                onChange={handleInputChange}
               />
             </div>
 
