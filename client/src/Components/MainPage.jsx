@@ -5,6 +5,7 @@ const MainPage = () => {
   const [recentItems, setRecentItems] = useState([]);
   const [topCollections, setTopCollections] = useState([]);
   const [tags, setTags] = useState([]);
+  const [showForm, setShowForm] = useState(false); // Track form visibility
   const [newCollection, setNewCollection] = useState({
     name: '',
     description: '',
@@ -34,7 +35,7 @@ const MainPage = () => {
   };
 
   const uploadImage = async () => {
-    if (!image) return;
+    if (!image) return '';
     const formData = new FormData();
     formData.append('image', image);
     try {
@@ -46,7 +47,7 @@ const MainPage = () => {
       return response.data.url; // Assuming the response contains the image URL
     } catch (error) {
       console.error('Image upload failed:', error);
-      return null;
+      return '';
     }
   };
 
@@ -61,64 +62,95 @@ const MainPage = () => {
     };
 
     try {
-      await axios.post('/api/collections', collectionData);
+      await axios.post('/api/collections', collectionData, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}` // Add authorization header
+        }
+      });
       console.log('Collection created:', collectionData);
-      // Handle success (e.g., reset form or redirect)
+      // Reset form and hide it
+      setNewCollection({
+        name: '',
+        description: '',
+        category: '',
+        imageUrl: ''
+      });
+      setImage(null);
+      setShowForm(false);
     } catch (error) {
       console.error('Error creating collection:', error);
     }
   };
 
+  const handleShowForm = () => {
+    const authToken = localStorage.getItem('authToken');
+    if (!authToken) {
+      alert('You must be logged in to create a collection.');
+      return;
+    }
+    setShowForm(true);
+  };
+
   return (
     <div className="p-4">
-      {/* Create Collection Section */}
-      <section className="mb-8">
-        <h2 className="text-xl font-bold mb-4">Create New Collection</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            name="name"
-            value={newCollection.name}
-            onChange={handleChange}
-            placeholder="Collection Name"
-            className="p-2 border rounded w-full"
-            required
-          />
-          <textarea
-            name="description"
-            value={newCollection.description}
-            onChange={handleChange}
-            placeholder="Description"
-            className="p-2 border rounded w-full"
-            rows="4"
-            required
-          />
-          <select
-            name="category"
-            value={newCollection.category}
-            onChange={handleChange}
-            className="p-2 border rounded w-full"
-            required
-          >
-            <option value="">Select Category</option>
-            {categories.map(category => (
-              <option key={category} value={category}>{category}</option>
-            ))}
-          </select>
-          <input
-            type="file"
-            name="image"
-            onChange={handleChange}
-            className="p-2 border rounded w-full"
-          />
-          <button
-            type="submit"
-            className="bg-blue-500 text-white p-2 rounded"
-          >
-            Create Collection
-          </button>
-        </form>
-      </section>
+      {/* Button to show form */}
+      <button
+        onClick={handleShowForm}
+        className="bg-green-500 text-white p-2 rounded mb-8"
+      >
+        Create Collection
+      </button>
+
+      {/* Create Collection Form */}
+      {showForm && (
+        <section className="mb-8">
+          <h2 className="text-xl font-bold mb-4">Create New Collection</h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <input
+              type="text"
+              name="name"
+              value={newCollection.name}
+              onChange={handleChange}
+              placeholder="Collection Name"
+              className="p-2 border rounded w-full"
+              required
+            />
+            <textarea
+              name="description"
+              value={newCollection.description}
+              onChange={handleChange}
+              placeholder="Description"
+              className="p-2 border rounded w-full"
+              rows="4"
+              required
+            />
+            <select
+              name="category"
+              value={newCollection.category}
+              onChange={handleChange}
+              className="p-2 border rounded w-full"
+              required
+            >
+              <option value="">Select Category</option>
+              {categories.map(category => (
+                <option key={category} value={category}>{category}</option>
+              ))}
+            </select>
+            <input
+              type="file"
+              name="image"
+              onChange={handleChange}
+              className="p-2 border rounded w-full"
+            />
+            <button
+              type="submit"
+              className="bg-blue-500 text-white p-2 rounded"
+            >
+              Create Collection
+            </button>
+          </form>
+        </section>
+      )}
 
       {/* Recently Added Items */}
       <section className="mb-8">
