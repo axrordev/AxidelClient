@@ -25,30 +25,31 @@ const SignInPage = () => {
     event.preventDefault();
 
 		try {
-      const response = await axios.post(
-        'https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Accounts/login',
-        {
-          email: formData.email,
+			const response = await axios.post(
+				'https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Accounts/login',{
+				params: {
+					email: formData.email,
           password: formData.password
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': '*/*'
-          }
-        }
-      );
-
-      if (response.status === 200) {
-        console.log('Login successful:', response.data);
-        // Save token to local storage or context
-        localStorage.setItem('token', response.data.data.token);
-        navigate('/'); 
-      }
-    } catch (error) {
-      console.error('Login failed:', error.response?.data || error.message);
-      alert('Login failed. Please check your credentials and try again.');
-    }
+				}
+			});
+	
+			if (response.status === 200) {
+				navigate('/');
+			} else {
+				alert('Sign in failed: ' + response.data.message);
+			}
+		} catch (error) {
+			if (error.response) {
+				// Serverdan xato xabar
+				alert('Error: ' + error.response.data.message || error.response.statusText);
+			} else if (error.request) {
+				// So‘rov yuborilgan, lekin javob olinmagan
+				alert('No response received: ' + error.message);
+			} else {
+				// So‘rovni sozlashdagi xatolik
+				alert('Error in setup: ' + error.message);
+			}
+		}
   };
 
   return (
