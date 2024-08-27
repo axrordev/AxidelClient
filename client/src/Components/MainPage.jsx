@@ -84,7 +84,7 @@ const MainPage = () => {
   };
 
   const handleShowForm = () => {
-    const authToken = localStorage.getItem('authToken');
+    const authToken = localStorage.getItem('token');
     if (!authToken) {
       alert('You must be logged in to create a collection.');
       return;
