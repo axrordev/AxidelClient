@@ -1,11 +1,56 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const SignInPage = () => {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+
+  const handleInputChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+
+  const onSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const response = await axios.post(
+        'https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Accounts/login',{
+				params: {
+					email: formData.email,
+          password: formData.password,
+				}
+		});
+
+      if (response.status === 200) {
+        // Redirect to the home page upon successful sign-in
+        navigate('/');
+      } else {
+        alert('Sign in failed: ' + response.data.message);
+      }
+    } catch (error) {
+      if (error.response) {
+        // Serverdan xato xabar
+        alert('Error: ' + error.response.data.message || error.response.statusText);
+      } else if (error.request) {
+        // So‘rov yuborilgan, lekin javob olinmagan
+        alert('No response received: ' + error.message);
+      } else {
+        // So‘rovni sozlashdagi xatolik
+        alert('Error in setup: ' + error.message);
+      }
+    }
   };
 
   return (
@@ -17,7 +62,7 @@ const SignInPage = () => {
             Don't have an account? <Link to="/signup" className="text-blue-600 hover:text-blue-700 hover:underline">Sign up here</Link>
           </p>
 
-          <form className="my-4 text-sm">
+          <form className="my-4 text-sm" onSubmit={onSubmit}>
             <div className="flex flex-col my-4">
               <label htmlFor="email" className="text-gray-700">Email Address</label>
               <input
@@ -26,6 +71,8 @@ const SignInPage = () => {
                 id="email"
                 className="mt-2 p-2 border border-gray-300 focus:outline-none focus:ring-0 focus:border-gray-300 rounded text-sm text-gray-900"
                 placeholder="Enter your email"
+                value={formData.email}
+                onChange={handleInputChange}
               />
             </div>
 
@@ -38,6 +85,8 @@ const SignInPage = () => {
                   id="password"
                   className="flex-1 p-2 pr-10 border border-gray-300 focus:outline-none focus:ring-0 focus:border-gray-300 rounded text-sm text-gray-900"
                   placeholder="Enter your password"
+                  value={formData.password}
+                  onChange={handleInputChange}
                 />
                 <button
                   type="button"
@@ -63,7 +112,7 @@ const SignInPage = () => {
             </button>
           </form>
 
-          <div className="flex items-center justify-between ">
+          <div className="flex items-center justify-between">
             <button className="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 flex items-center justify-center space-x-2">
               <span>Sign in with Google</span>
             </button>
