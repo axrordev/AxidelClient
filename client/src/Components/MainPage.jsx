@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 
 const MainPage = () => {
-  const [recentItems, setRecentItems] = useState([]);
+ /* const [recentItems, setRecentItems] = useState([]);
   const [topCollections, setTopCollections] = useState([]);
   const [tags, setTags] = useState([]);
+	*/
   const [showForm, setShowForm] = useState(false); // Track form visibility
   const [newCollection, setNewCollection] = useState({
     name: '',
@@ -14,14 +15,14 @@ const MainPage = () => {
   });
   const [image, setImage] = useState(null);
   const [categories] = useState(['Books', 'Signs', 'Silverware', 'Other']); // Define categories
-
+/*
   useEffect(() => {
     // Fetch recent items, top collections, and tags
     axios.get('/api/items/recent').then(response => setRecentItems(response.data));
     axios.get('/api/collections/top').then(response => setTopCollections(response.data));
     axios.get('/api/tags').then(response => setTags(response.data));
   }, []);
-
+*/
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === 'image') {
@@ -152,7 +153,7 @@ const MainPage = () => {
         </section>
       )}
 
-      {/* Recently Added Items */}
+      {/* Recently Added Items 
       <section className="mb-8">
         <h2 className="text-xl font-bold mb-4">Recently Added Items</h2>
         <ul>
@@ -165,8 +166,8 @@ const MainPage = () => {
           ))}
         </ul>
       </section>
-
-      {/* Top 5 Largest Collections */}
+*/}
+      {/* Top 5 Largest Collections 
       <section className="mb-8">
         <h2 className="text-xl font-bold mb-4">Top 5 Largest Collections</h2>
         <ul>
@@ -178,8 +179,8 @@ const MainPage = () => {
           ))}
         </ul>
       </section>
-
-      {/* Tag Cloud */}
+*/}
+      {/* Tag Cloud 
       <section>
         <h2 className="text-xl font-bold mb-4">Tag Cloud</h2>
         <div className="flex flex-wrap gap-2">
@@ -194,6 +195,7 @@ const MainPage = () => {
           ))}
         </div>
       </section>
+			*/}
     </div>
   );
 };
