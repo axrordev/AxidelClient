@@ -25,13 +25,13 @@ const RegisterVerifyPage = () => {
       }
 
       const data = await response.json();
-
+			console.log(data)
       if (data.statusCode === 200) {
         // Store the token in local storage or cookies if needed
         localStorage.setItem('token', data.data.token);
 
         // Navigate to the main page after successful verification
-        navigate('https://axidel.netlify.app/'); // Adjust this path as necessary
+        navigate('/'); // Adjust this path as necessary
       } else {
         alert('Verification failed: ' + data.message);
       }
