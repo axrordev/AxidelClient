@@ -7,29 +7,36 @@ const RegisterVerifyPage = () => {
   const [code, setCode] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    const response = await fetch(`https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Accounts/register-verify`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: email,
-        code: code,
-        password: password,
-      }),
-    });
+  const onSubmit = async (event) => {
+    event.preventDefault();
 
-    const data = await response.json();
+    try {
+      const response = await fetch('https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Accounts/register-verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: email, code: code, password: password }),
+      });
 
-    if (data.statusCode === 200) {
-      // Success - Navigate to the main page
-      navigate('/');  // Replace '/' with the main page path
-    } else {
-      // Handle error
-      alert('Verification failed: ' + data.message);
+      if (!response.ok) {
+        alert('Error: ' + response.statusText);
+        return;
+      }
+
+      const data = await response.json();
+
+      if (data.statusCode === 200) {
+        // Store the token in local storage or cookies if needed
+        localStorage.setItem('token', data.data.token);
+
+        // Navigate to the main page after successful verification
+        navigate('https://axidel.netlify.app/'); // Adjust this path as necessary
+      } else {
+        alert('Verification failed: ' + data.message);
+      }
+    } catch (error) {
+      alert('Failed to verify: ' + error.message);
     }
   };
 
@@ -42,17 +49,17 @@ const RegisterVerifyPage = () => {
             Please enter the verification code sent to your email.
           </p>
 
-          <form className="my-4 text-sm" onSubmit={handleSubmit}>
+          <form className="my-4 text-sm" onSubmit={onSubmit}>
             <div className="flex flex-col my-4">
               <label htmlFor="email" className="text-gray-700">Email Address</label>
               <input
                 type="email"
                 name="email"
                 id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
                 className="mt-2 p-2 border border-gray-300 focus:outline-none focus:ring-0 focus:border-gray-300 rounded text-sm text-gray-900"
                 placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
 
@@ -62,10 +69,10 @@ const RegisterVerifyPage = () => {
                 type="password"
                 name="password"
                 id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
                 className="mt-2 p-2 border border-gray-300 focus:outline-none focus:ring-0 focus:border-gray-300 rounded text-sm text-gray-900"
                 placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
 
@@ -75,17 +82,17 @@ const RegisterVerifyPage = () => {
                 type="text"
                 name="code"
                 id="code"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
                 className="mt-2 p-2 border border-gray-300 focus:outline-none focus:ring-0 focus:border-gray-300 rounded text-sm text-gray-900"
                 placeholder="Enter the verification code"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
               />
             </div>
 
             <button type="submit" className="w-full bg-blue-600 text-white py-[10px] mt-4 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
               Verify
             </button>
-          </form>   
+          </form>
         </div>
       </div>
     </div>
