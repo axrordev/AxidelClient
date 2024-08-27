@@ -22,9 +22,7 @@ const SignInPage = () => {
   };
 
   const onSubmit = async (event) => {
-    event.preventDefault();
-		console.log(formData.email + formData.password)
-		
+    event.preventDefault();		
 		try {
 			const response = await axios.post(
 					`https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Accounts/login?email=${encodeURIComponent(formData.email)}&password=${encodeURIComponent(formData.password)}`,
@@ -38,10 +36,9 @@ const SignInPage = () => {
 					
 			);
 			if (response.status === 200) {
-        console.log('Login successful:', response.data);
         // Save token to local storage or context
         localStorage.setItem('token', response.data.data.token);
-        navigate('/'); // Navigate to home page or another route
+        navigate('/');
       }
     } catch (error) {
       console.error('Login failed:', error.response?.data || error.message);

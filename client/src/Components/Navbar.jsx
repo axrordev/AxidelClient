@@ -5,6 +5,7 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -21,11 +22,22 @@ const Navbar = () => {
     setIsSearchVisible(!isSearchVisible);
     setIsMobileMenuOpen(false); // Search ochilganda mobile menu yopiladi
   };
+	
+	const handleLogout = () => {
+    localStorage.removeItem('token'); // Tokenni o'chirish
+    setIsLoggedIn(false);
+    window.location.reload(); // Sahifani yangilash
+  };
 
   useEffect(() => {
     const savedMode = localStorage.getItem('darkMode') === 'true';
     setIsDarkMode(savedMode);
     document.body.className = savedMode ? 'dark' : '';
+
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsLoggedIn(true);
+    }
   }, []);
 
   useEffect(() => {
@@ -136,11 +148,23 @@ const Navbar = () => {
                 Services
               </a>
             </li>
-						{/* Log In button for mobile */}
+						{/* Log In/Log Out button for mobile */}
             <li className="block md:hidden">
-              <a href="/signin" className={`block py-2 px-3 ${isDarkMode ? 'text-white' : 'text-gray-900'} rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}>
-                Log In
-              </a>
+              {isLoggedIn ? (
+                <button
+                  onClick={handleLogout}
+                  className={`block py-2 px-3 ${isDarkMode ? 'text-white' : 'text-gray-900'} rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
+                >
+                  Log Out
+                </button>
+              ) : (
+                <a
+                  href="/SignIn"
+                  className={`block py-2 px-3 ${isDarkMode ? 'text-white' : 'text-gray-900'} rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
+                >
+                  Log In
+                </a>
+              )}
             </li>
           </ul>
         </div>
