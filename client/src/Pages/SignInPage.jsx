@@ -26,12 +26,12 @@ const SignInPage = () => {
 
     try {
       const response = await axios.post(
-        'https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Accounts/login',{
-				params: {
+        'https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Accounts/login',
+				{
 					email: formData.email,
           password: formData.password,
 				}
-		});
+		);
 
       if (response.status === 200) {
         // Redirect to the home page upon successful sign-in
