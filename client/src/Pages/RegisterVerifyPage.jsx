@@ -20,7 +20,7 @@ const RegisterVerifyPage = () => {
     event.preventDefault();
 
 		try {
-      const response = await axios.post('https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Accounts/register-verify', {
+      const response = await axios.get('https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Accounts/register-verify', {
         email: formData.email,
         code: formData.code,
       });
