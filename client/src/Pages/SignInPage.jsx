@@ -23,18 +23,17 @@ const SignInPage = () => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-
+		console.log(formData.email + formData.password)
 		try {
 			const response = await axios.post(
 				'https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Accounts/login',{
-				params: {
 					email: formData.email,
           password: formData.password
 				}
-			});
+			);
 	
 			if (response.status === 200) {
-				navigate('/');
+				navigate('/register-verify');
 			} else {
 				alert('Sign in failed: ' + response.data.message);
 			}
