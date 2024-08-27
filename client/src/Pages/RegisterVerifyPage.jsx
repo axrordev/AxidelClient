@@ -5,46 +5,29 @@ import axios from 'axios';
 const RegisterVerifyPage = () => {
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
+	const [formData, setFormData] = useState({
+    email: '',
+    code: '',
+  });
   const navigate = useNavigate();
 
   const onSubmit = async (event) => {
     event.preventDefault();
 
-    try {
-      const response = await axios.post(
-        'https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Accounts/register-verify',
-        { email, code },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+		try {
+      const response = await axios.post('https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Accounts/register-verify', {
+        email: formData.email,
+        code: formData.code,
+      });
 
       if (response.status === 200) {
-        const data = response.data;
-        console.log(data);
-        // Store the token in local storage or cookies if needed
-        localStorage.setItem('token', data.data.token);
-
-        // Navigate to the main page after successful verification
-        navigate('/signin'); // Adjust this path as necessary
-      } else {
-        alert('Verification failed: ' + response.data.message);
+        navigate('/signin');
       }
     } catch (error) {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        alert('Error: ' + error.response.data.message || error.response.statusText);
-      } else if (error.request) {
-        // The request was made but no response was received
-        alert('No response received: ' + error.message);
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        alert('Error in setup: ' + error.message);
-      }
+      console.error('Registration failed:', error);
+      alert('Registration failed. Please try again.');
     }
+
   };
 
   return (
