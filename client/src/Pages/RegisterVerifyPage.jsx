@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const RegisterVerifyPage = () => {
   const [email, setEmail] = useState('');
@@ -11,32 +12,39 @@ const RegisterVerifyPage = () => {
     event.preventDefault();
 
     try {
-      const response = await fetch('https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Accounts/register-verify', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: email, code: code, password: password }),
-      });
+      const response = await axios.post(
+        'https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Accounts/register-verify',
+        { email, code, password },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
 
-      if (!response.ok) {
-        alert('Error: ' + response.statusText);
-        return;
-      }
-
-      const data = await response.json();
-			console.log(data)
-      if (data.statusCode === 200) {
+      if (response.status === 200) {
+        const data = response.data;
+        console.log(data);
         // Store the token in local storage or cookies if needed
         localStorage.setItem('token', data.data.token);
 
         // Navigate to the main page after successful verification
         navigate('/login'); // Adjust this path as necessary
       } else {
-        alert('Verification failed: ' + data.message);
+        alert('Verification failed: ' + response.data.message);
       }
     } catch (error) {
-      alert('Failed to verify: ' + error.message);
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        alert('Error: ' + error.response.data.message || error.response.statusText);
+      } else if (error.request) {
+        // The request was made but no response was received
+        alert('No response received: ' + error.message);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        alert('Error in setup: ' + error.message);
+      }
     }
   };
 
