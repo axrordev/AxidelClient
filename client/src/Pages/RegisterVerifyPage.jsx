@@ -31,7 +31,7 @@ const RegisterVerifyPage = () => {
         localStorage.setItem('token', data.data.token);
 
         // Navigate to the main page after successful verification
-        navigate('/'); // Adjust this path as necessary
+        navigate('/login'); // Adjust this path as necessary
       } else {
         alert('Verification failed: ' + data.message);
       }
