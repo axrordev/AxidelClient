@@ -4,7 +4,6 @@ import axios from 'axios';
 
 const RegisterVerifyPage = () => {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [code, setCode] = useState('');
   const navigate = useNavigate();
 
@@ -14,7 +13,7 @@ const RegisterVerifyPage = () => {
     try {
       const response = await axios.post(
         'https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Accounts/register-verify',
-        { email, code, password },
+        { email, code },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -29,7 +28,7 @@ const RegisterVerifyPage = () => {
         localStorage.setItem('token', data.data.token);
 
         // Navigate to the main page after successful verification
-        navigate('/login'); // Adjust this path as necessary
+        navigate('/signin'); // Adjust this path as necessary
       } else {
         alert('Verification failed: ' + response.data.message);
       }
@@ -71,18 +70,6 @@ const RegisterVerifyPage = () => {
               />
             </div>
 
-            <div className="flex flex-col my-4">
-              <label htmlFor="password" className="text-gray-700">Password</label>
-              <input
-                type="password"
-                name="password"
-                id="password"
-                className="mt-2 p-2 border border-gray-300 focus:outline-none focus:ring-0 focus:border-gray-300 rounded text-sm text-gray-900"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
 
             <div className="flex flex-col my-4">
               <label htmlFor="code" className="text-gray-700">Verification Code</label>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios'; // axios import qilish
+import axios from 'axios'; 
 
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -47,7 +47,7 @@ const SignUpPage = () => {
       });
 
       if (response.status === 200) {
-        navigate('/register-verify'); // Ro'yxatdan o'tish muvaffaqiyatli bo'lsa, sahifaga yo'naltirish
+        navigate('/register-verify');
       }
     } catch (error) {
       console.error('Registration failed:', error);
