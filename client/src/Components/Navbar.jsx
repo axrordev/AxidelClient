@@ -217,9 +217,19 @@ const Navbar = () => {
           {/* Log In button */}
           <ul className="hidden md:block md:order-2 w-full pt-2 ps-10 text-sm">
             <li>
-              <a href="/signin" className="text-[15px] text-white bg-blue-500 hover:bg-blue-600 rounded-lg p-[10px]">
+							{isLoggedIn ? (
+								<a href="/signin"  onClick={handleLogout} className="text-[15px] text-white bg-blue-500 hover:bg-blue-600 rounded-lg p-[10px]">
+								Log out
+								</a>
+								) : 
+								(<a href="/signin" className="text-[15px] text-white bg-blue-500 hover:bg-blue-600 rounded-lg p-[10px]">
+								Log In
+								</a>
+								)}
+
+              {/*<a href="/signin" className="text-[15px] text-white bg-blue-500 hover:bg-blue-600 rounded-lg p-[10px]">
                 Log In
-              </a>
+						</a>*/}
             </li>
           </ul>
         </div>
