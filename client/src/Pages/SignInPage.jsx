@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const SignInPage = () => {
@@ -27,13 +27,21 @@ const SignInPage = () => {
     try {
       const response = await axios.post(
         'https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Accounts/login',
-				{
-					email: formData.email,
+        {
+          email: formData.email,
           password: formData.password,
-				}
-		);
+        }
+      );
 
       if (response.status === 200) {
+        console.log(response.data); // Output the response data
+
+        // Saqlash uchun tokenni olish
+        const { token } = response.data.data;
+
+        // Tokenni localStorage ga saqlash
+        localStorage.setItem('authToken', token);
+
         // Redirect to the home page upon successful sign-in
         navigate('/');
       } else {
@@ -59,7 +67,7 @@ const SignInPage = () => {
         <div className="bg-white w-5/6 md:w-3/4 lg:w-2/3 xl:w-[500px] 2xl:w-[550px] mt-8 mx-auto px-16 py-8 rounded-lg shadow-2xl">
           <h2 className="text-center text-2xl font-bold tracking-wide text-gray-800">Sign In</h2>
           <p className="text-center text-sm text-gray-600 mt-2">
-            Don't have an account? <Link to="/signup" className="text-blue-600 hover:text-blue-700 hover:underline">Sign up here</Link>
+            Don't have an account? <a href="/signup" className="text-blue-600 hover:text-blue-700 hover:underline">Sign up here</a>
           </p>
 
           <form className="my-4 text-sm" onSubmit={onSubmit}>
