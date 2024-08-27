@@ -20,18 +20,31 @@ const RegisterVerifyPage = () => {
     event.preventDefault();
 
 		try {
-      const response = await axios.get('https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Accounts/register-verify', {
-        email: formData.email,
-        code: formData.code,
-      });
-
-      if (response.status === 200) {
-        navigate('/signin');
-      }
-    } catch (error) {
-      console.error('Registration failed:', error);
-      alert('Registration failed. Please try again.');
-    }
+			const response = await axios.get(
+				'https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Accounts/register-verify', {
+				params: {
+					email: formData.email,
+					code: formData.code
+				}
+			});
+	
+			if (response.status === 200) {
+				navigate('/signin');
+			} else {
+				alert('Verification failed: ' + response.data.message);
+			}
+		} catch (error) {
+			if (error.response) {
+				// Serverdan xato xabar
+				alert('Error: ' + error.response.data.message || error.response.statusText);
+			} else if (error.request) {
+				// So‘rov yuborilgan, lekin javob olinmagan
+				alert('No response received: ' + error.message);
+			} else {
+				// So‘rovni sozlashdagi xatolik
+				alert('Error in setup: ' + error.message);
+			}
+		}
 
   };
 
