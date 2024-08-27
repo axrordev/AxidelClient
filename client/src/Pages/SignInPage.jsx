@@ -30,7 +30,12 @@ const SignInPage = () => {
         {
           email: formData.email,
           password: formData.password,
-        }
+        },
+				{
+					headers: {
+						'Content-Type': 'application/json',
+					}
+				}
       );
 
       if (response.status === 200) {
