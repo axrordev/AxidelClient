@@ -6,21 +6,21 @@ const MainPage = () => {
     const [collectionName, setCollectionName] = useState('');
     const [description, setDescription] = useState('');
     const [category, setCategory] = useState('');
-    const [image, setImage] = useState(null);
     const [imageId, setImageId] = useState(null);
-    const modalRef = useRef(null); // Ref for modal content
+    const [collections, setCollections] = useState([]); // Added state to store collections
+    const modalRef = useRef(null);
 
     const openModal = () => {
-			const authToken = localStorage.getItem("token");
-			if (!authToken) {
-				alert("You must be logged in to create a collection.");
-				return;
-			}
-			setIsModalOpen(true);
-		};
+        const authToken = localStorage.getItem("token");
+        if (!authToken) {
+            alert("You must be logged in to create a collection.");
+            return;
+        }
+        setIsModalOpen(true);
+    };
+
     const closeModal = () => setIsModalOpen(false);
 
-    // Close  modal
     const handleClickOutside = (event) => {
         if (modalRef.current && !modalRef.current.contains(event.target)) {
             closeModal();
@@ -50,34 +50,25 @@ const MainPage = () => {
         }
     };
 
-		function getUserIdFromToken(token) {
-			try {
-					// Tokenni '.' orqali bo'lib olish
-					const payloadBase64Url = token.split('.')[1];
-	
-					// Base64Url formatni oddiy Base64 ga aylantirish
-					const payloadBase64 = payloadBase64Url.replace(/-/g, '+').replace(/_/g, '/');
-	
-					// Base64 ni dekod qilish
-					const decodedPayload = atob(payloadBase64);
-	
-					// JSON obyektiga aylantirish
-					const payload = JSON.parse(decodedPayload);
-	
-					// Id ni olish
-					return payload.Id; // 'Id' yoki 'id' bo'lishi mumkin, JWT da qanday nomlanganiga qarab
-			} catch (error) {
-					console.error('Error decoding token:', error);
-					return null;
-			}
-	}
+    const getUserIdFromToken = (token) => {
+        try {
+            const payloadBase64Url = token.split('.')[1];
+            const payloadBase64 = payloadBase64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const decodedPayload = atob(payloadBase64);
+            const payload = JSON.parse(decodedPayload);
+            return payload.Id;
+        } catch (error) {
+            console.error('Error decoding token:', error);
+            return null;
+        }
+    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const token = localStorage.getItem('token'); 
+        const token = localStorage.getItem('token');
         try {
-            await axios.post(
+            const response = await axios.post(
                 'https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Collection',
                 {
                     name: collectionName,
@@ -92,11 +83,14 @@ const MainPage = () => {
                     }
                 }
             );
+            
+            // Add the newly created collection to the list of collections
+            setCollections([...collections, response.data]);
+
             // Clear form and close modal
             setCollectionName('');
             setDescription('');
             setCategory('');
-            setImage(null);
             setImageId(null);
             closeModal();
         } catch (error) {
@@ -104,10 +98,8 @@ const MainPage = () => {
         }
     };
 
-
     return (
         <div>
-            {/* Modal toggle button */}
             <button
                 onClick={openModal}
                 className="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -116,20 +108,18 @@ const MainPage = () => {
                 Create Collection
             </button>
 
-            {/* Modal */}
             {isModalOpen && (
                 <div
                     id="crud-modal"
                     tabIndex="-1"
                     aria-hidden="true"
                     className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50"
-                    onClick={handleClickOutside} // Click handler for closing the modal
+                    onClick={handleClickOutside}
                 >
                     <div
                         ref={modalRef}
                         className="relative p-4 w-full max-w-md max-h-full bg-white rounded-lg shadow dark:bg-gray-700"
                     >
-                        {/* Modal header */}
                         <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                                 Create New Collection
@@ -157,7 +147,6 @@ const MainPage = () => {
                                 <span className="sr-only">Close modal</span>
                             </button>
                         </div>
-                        {/* Modal body */}
                         <form onSubmit={handleSubmit} className="p-4 md:p-5">
                             <div className="grid gap-4 mb-4 grid-cols-2">
                                 <div className="col-span-2">
@@ -238,7 +227,7 @@ const MainPage = () => {
                                 >
                                     <path
                                         fillRule="evenodd"
-                                        d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                                        d="M10 5a1 1 0 0 1 1 1v3h3a1 1 0 0 1 0 2h-3v3a1 1 0 0 1-2 0v-3H6a1 1 0 0 1 0-2h3V6a1 1 0 0 1 1-1z"
                                         clipRule="evenodd"
                                     />
                                 </svg>
@@ -248,6 +237,26 @@ const MainPage = () => {
                     </div>
                 </div>
             )}
+
+            <div className="mt-4">
+                {collections.length > 0 ? (
+                    collections.map((collection) => (
+                        <div key={collection.id} className="border p-4 mb-4">
+                            <h3 className="text-lg font-semibold">{collection.name}</h3>
+                            <p>{collection.description}</p>
+                            {collection.imageId && (
+                                <img
+                                    src={`https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Collection/download-image/${collection.imageId}`}
+                                    alt={collection.name}
+                                    className="mt-2"
+                                />
+                            )}
+                        </div>
+                    ))
+                ) : (
+                    <p>No collections found.</p>
+                )}
+            </div>
         </div>
     );
 };
