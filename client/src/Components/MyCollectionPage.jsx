@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
 
-const MainPage = () => {
+const MyCollection = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [collectionName, setCollectionName] = useState('');
     const [description, setDescription] = useState('');
@@ -261,4 +261,4 @@ const MainPage = () => {
     );
 };
 
-export default MainPage;
+export default MyCollection;

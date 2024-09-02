@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaBars, FaSearch } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -122,31 +123,32 @@ const Navbar = () => {
           id="navbar-search"
           className={`items-center justify-between w-full md:flex md:w-auto md:order-1 ${isMobileMenuOpen ? '' : 'hidden'}`}
         >
-          <ul className={`flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700 ${isSearchVisible ? 'hidden' : ''}`}>
+					<nav>
+					<ul className={`flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700 ${isSearchVisible ? 'hidden' : ''}`}>
             <li>
-              <a
-                href="/Home"
+              <Link
+                to="/home"
                 className={`block py-2 px-3 ${isDarkMode ? 'text-white' : 'text-gray-900'} bg-${isDarkMode ? 'blue-700' : 'white'} rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500`}
                 aria-current="page"
               >
                 Home
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="/About"
+              <Link
+                to="/mycollection"
                 className={`block py-2 px-3 ${isDarkMode ? 'text-white' : 'text-gray-900'} rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
               >
-                About
-              </a>
+                My Collections
+              </Link>
             </li>
             <li>
-              <a
-                href="/Services"
+              <Link
+                to="/services"
                 className={`block py-2 px-3 ${isDarkMode ? 'text-white' : 'text-gray-900'} rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
               >
                 Services
-              </a>
+              </Link>
             </li>
 						{/* Log In/Log Out button for mobile */}
             <li className="block md:hidden">
@@ -167,6 +169,8 @@ const Navbar = () => {
               )}
             </li>
           </ul>
+					</nav>
+          
         </div>
 
         {/* Search input, Theme button, Log In button */}
