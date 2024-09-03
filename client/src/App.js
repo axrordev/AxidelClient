@@ -14,7 +14,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Dashboard />}>
           {/* Nested routes under Dashboard */}
-          <Route path="home" element={<HomePage />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="mycollection" element={<MyCollection />} />
           <Route path="services" element={<ServicesPage />} />
         </Route>

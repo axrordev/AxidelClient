@@ -7,7 +7,9 @@ const MyCollection = () => {
     const [description, setDescription] = useState('');
     const [category, setCategory] = useState('');
     const [imageId, setImageId] = useState(null);
-    const [collections, setCollections] = useState([]); // Added state to store collections
+    const [fileName, setFileName] = useState('');
+    const [filePath, setFilePath] = useState(''); // This will hold the file path of the uploaded image
+    const [collections, setCollections] = useState([]); // State to store collections
     const modalRef = useRef(null);
 
     const openModal = () => {
@@ -43,7 +45,16 @@ const MyCollection = () => {
                         }
                     }
                 );
-                setImageId(response.data.id); 
+
+                // Assuming the response contains the image object with id, fileName, and filePath
+                const { id, fileName, filePath } = response.data;
+
+                // Set the image data to state
+                setImageId(id);
+                setFileName(fileName);
+                setFilePath(filePath);
+
+                console.log('Image uploaded successfully:', { id, fileName, filePath });
             } catch (error) {
                 console.error('Error uploading image:', error);
             }
@@ -92,6 +103,8 @@ const MyCollection = () => {
             setDescription('');
             setCategory('');
             setImageId(null);
+            setFileName('');
+            setFilePath('');
             closeModal();
         } catch (error) {
             console.error('Error creating collection:', error);
@@ -213,24 +226,20 @@ const MyCollection = () => {
                                         onChange={handleImageUpload}
                                         className="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:bg-gray-600 dark:border-gray-500 dark:text-white dark:placeholder-gray-400"
                                     />
+                                    {/* Display the uploaded image */}
+                                    {filePath && (
+                                        <img
+                                            src={filePath}
+                                            alt={fileName}
+                                            className="mt-4 max-h-40 object-contain"
+                                        />
+                                    )}
                                 </div>
                             </div>
                             <button
                                 type="submit"
-                                className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                             >
-                                <svg
-                                    className="me-1 -ms-1 w-5 h-5"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        fillRule="evenodd"
-                                        d="M10 5a1 1 0 0 1 1 1v3h3a1 1 0 0 1 0 2h-3v3a1 1 0 0 1-2 0v-3H6a1 1 0 0 1 0-2h3V6a1 1 0 0 1 1-1z"
-                                        clipRule="evenodd"
-                                    />
-                                </svg>
                                 Create Collection
                             </button>
                         </form>
@@ -238,24 +247,23 @@ const MyCollection = () => {
                 </div>
             )}
 
+            {/* Display collections */}
             <div className="mt-4">
-                {collections.length > 0 ? (
-                    collections.map((collection) => (
-                        <div key={collection.id} className="border p-4 mb-4">
-                            <h3 className="text-lg font-semibold">{collection.name}</h3>
-                            <p>{collection.description}</p>
-                            {collection.imageId && (
-                                <img
-                                    src={`https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Collection/download-image/${collection.imageId}`}
-                                    alt={collection.name}
-                                    className="mt-2"
-                                />
-                            )}
-                        </div>
-                    ))
-                ) : (
-                    <p>No collections found.</p>
-                )}
+                {collections.map((collection) => (
+                    <div key={collection.id} className="p-4 border rounded-lg mb-4">
+                        <h4 className="text-lg font-semibold">{collection.name}</h4>
+                        <p>{collection.description}</p>
+                        <p>Category: {collection.category}</p>
+                        {/* Display collection image */}
+                        {collection.filePath && (
+                            <img
+                                src={collection.filePath}
+                                alt={collection.fileName}
+                                className="mt-2 max-h-40 object-contain"
+                            />
+                        )}
+                    </div>
+                ))}
             </div>
         </div>
     );
