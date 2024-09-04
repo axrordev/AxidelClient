@@ -8,7 +8,7 @@ const MyCollection = () => {
     const [category, setCategory] = useState('');
     const [imageId, setImageId] = useState(null);
     const [fileName, setFileName] = useState('');
-    const [filePath, setFilePath] = useState(''); // This will hold the file path of the uploaded image
+    const [filePath, setFilePath] = useState(''); 
     const [collections, setCollections] = useState([]); // State to store collections
     const modalRef = useRef(null);
 

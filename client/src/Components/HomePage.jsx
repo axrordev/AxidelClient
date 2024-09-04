@@ -8,7 +8,14 @@ const HomePage = () => {
         const fetchCollections = async () => {
             try {
                 const response = await axios.get('https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Collection');
-                setCollections(response.data);
+                const data = response.data;
+
+                // Check if the response is an array
+                if (Array.isArray(data)) {
+                    setCollections(data);
+                } else {
+                    console.error('Expected an array but got:', data);
+                }
             } catch (error) {
                 console.error('Error fetching collections:', error);
             }
@@ -19,7 +26,7 @@ const HomePage = () => {
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {collections.map((collection) => (
+            {Array.isArray(collections) && collections.map((collection) => (
                 <div key={collection.id} className="flex flex-col bg-white border shadow-sm rounded-xl">
                     <img
                         className="w-full h-auto rounded-t-xl"
