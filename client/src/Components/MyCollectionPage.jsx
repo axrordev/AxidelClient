@@ -45,7 +45,11 @@ const MyCollection = () => {
                         }
                     }
                 );
-
+try {
+	adfsfasjfjf
+} catch (error) {
+	fasflssfjsfsf
+}
                 // Assuming the response contains the image object with id, fileName, and filePath
                 const { id, fileName, filePath } = response.data;
 

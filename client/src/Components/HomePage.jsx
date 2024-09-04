@@ -10,7 +10,7 @@ const HomePage = () => {
                 const response = await axios.get('https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Collection');
                 const data = response.data;
 
-                // Since the collections are in data.data, we need to access them like this:
+                // Ma'lumotlarni to'g'ri formatda olish
                 if (Array.isArray(data.data)) {
                     setCollections(data.data);
                 } else {
@@ -30,7 +30,8 @@ const HomePage = () => {
                 <div key={collection.id} className="flex flex-col bg-white border shadow-sm rounded-xl">
                     <img
                         className="w-full h-auto rounded-t-xl"
-                        src={collection.image ? `https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Collection/download-image/${collection.image.id}` : 'https://images.unsplash.com/photo-1680868543815-b8666dba60f7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=320&q=80'}
+                        // collection.image.filePath dan foydalanamiz
+                        src={collection.image ? `https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net${collection.image.filePath}` : 'https://images.unsplash.com/photo-1680868543815-b8666dba60f7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=320&q=80'}
                         alt={collection.name}
                     />
                     <div className="p-4 md:p-5">
