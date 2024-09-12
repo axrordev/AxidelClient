@@ -81,9 +81,7 @@ const MyCollection = () => {
 	}, []);
 	
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-
+    const handleSubmit = async (event) => {        
         const token = localStorage.getItem('token');
         try {
             // Create FormData to handle file upload
