@@ -32,24 +32,18 @@ const MyCollection = () => {
         }
     };
 
-		const getUserIdFromToken = (token) => {
-			try {
-					const payloadBase64Url = token.split('.')[1];
-					const payloadBase64 = payloadBase64Url.replace(/-/g, '+').replace(/_/g, '/');
-					const decodedPayload = atob(payloadBase64);
-					const payload = JSON.parse(decodedPayload);
-					return payload.id; // Case-sensitive: id or Id?
-			} catch (error) {
-					console.error('Error decoding token:', error);
-					return null;
-			}
+		const getUserIdFromToken = () => {
+			const token = localStorage.getItem("token");
+			const tokenObj = JSON.parse(token);
+			const userId = tokenObj.userId;
+			return userId
 	};
 
 
 		useEffect(() => {
 			const fetchCollections = async () => {
 				const token = localStorage.getItem('token');
-				const userId = getUserIdFromToken(token);
+				const userId = getUserIdFromToken();
 		
 				if (!userId) {
 						console.error('User ID not found in token.');
@@ -95,7 +89,7 @@ const MyCollection = () => {
 					formData.append('name', collectionName);
 					formData.append('description', description);
 					formData.append('category', category);
-					formData.append('userId', getUserIdFromToken(token));
+					formData.append('userId', getUserIdFromToken());
 	
 					// Append the file to FormData if a file was selected
 					if (file) {
