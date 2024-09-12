@@ -60,18 +60,19 @@ const MyCollection = () => {
 								"https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Collection"
 						);
 		
-						// Directly use the response.data
-						if (Array.isArray(response.data)) {
+						// Access response.data.data instead of response.data
+						if (Array.isArray(response.data.data)) {
 								// Faqat userId ga mos keladigan kolleksiyalarni filtrlash
-								const collections = response.data.filter(collection => collection.user.id === userId);
+								const collections = response.data.data.filter(collection => collection.user.id === userId);
 								setCollections(collections);
 						} else {
-								console.error("Expected an array but got:", response.data);
+								console.error("Expected an array but got:", response.data.data);
 						}
 				} catch (error) {
 						console.error("Error fetching collections:", error);
 				}
 		};
+		
 		
 	
 			fetchCollections();
