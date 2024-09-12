@@ -44,7 +44,6 @@ const MyCollection = () => {
 				try {
 						const decodedToken = jwtDecode(token); // Decode the token
 						const userId = decodedToken.Id; // Extract the 'Id' from the decoded token
-						console.log(userId)
 						return userId;
 				} catch (error) {
 						console.error('Error decoding token:', error);
@@ -53,34 +52,42 @@ const MyCollection = () => {
 		};
 		
     useEffect(() => {
-        const fetchCollections = async () => {
-            const userId = getUserIdFromToken();
-            if (!userId) {
-                console.error('User ID not found in token.');
-                return;
-            }
-
-            try {
-                const response = await axios.get(
-                    "https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Collection"
-                );
-
-                console.log("API Response:", response.data);
-
-                if (Array.isArray(response.data.data)) {
-                    const filteredCollections = response.data.data.filter(collection => collection.user.id === userId);
-                    console.log("Filtered collections:", filteredCollections);
-                    setCollections(filteredCollections);
-                } else {
-                    console.error("Expected an array but got:", response.data.data);
-                }
-            } catch (error) {
-                console.error("Error fetching collections:", error);
-            }
-        };
-
-        fetchCollections();
-    }, []);
+			const fetchCollections = async () => {
+					const userId = getUserIdFromToken();
+					if (!userId) {
+							console.error('User ID not found in token.');
+							return;
+					}
+	
+					try {
+							const response = await axios.get(
+									"https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Collection"
+							);
+	
+							console.log("API Response:", response.data);
+	
+							if (Array.isArray(response.data.data)) {
+									response.data.data.forEach(collection => {
+											console.log(`Collection User ID: ${collection.user.id}, Token User ID: ${userId}`);
+									});
+	
+									const filteredCollections = response.data.data.filter(
+											collection => collection.user.id.toString() === userId.toString()
+									);
+	
+									console.log("Filtered collections:", filteredCollections);
+									setCollections(filteredCollections);
+							} else {
+									console.error("Expected an array but got:", response.data.data);
+							}
+					} catch (error) {
+							console.error("Error fetching collections:", error);
+					}
+			};
+	
+			fetchCollections();
+	}, []);
+	
 
     const handleSubmit = async (event) => {
         event.preventDefault();
