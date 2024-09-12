@@ -7,8 +7,6 @@ const MyCollection = () => {
     const [description, setDescription] = useState('');
     const [category, setCategory] = useState('');
     const [imageId, setImageId] = useState(null);
-    const [fileName, setFileName] = useState('');
-    const [filePath, setFilePath] = useState(''); 
     const [collections, setCollections] = useState([]); // State to store collections
     const modalRef = useRef(null);
 
@@ -26,38 +24,6 @@ const MyCollection = () => {
     const handleClickOutside = (event) => {
         if (modalRef.current && !modalRef.current.contains(event.target)) {
             closeModal();
-        }
-    };
-
-    const handleImageUpload = async (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const formData = new FormData();
-            formData.append('file', file);
-
-            try {
-                const response = await axios.post(
-                    'https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Collection/upload-image?fileType=Images',
-                    formData,
-                    {
-                        headers: {
-                            'Content-Type': 'multipart/form-data'
-                        }
-                    }
-                );
-
-                // Assuming the response contains the image object with id, fileName, and filePath
-                const { id, fileName, filePath } = response.data;
-
-                // Set the image data to state
-                setImageId(id);
-                setFileName(fileName);
-                setFilePath(filePath);
-
-                console.log('Image uploaded successfully:', { id, fileName, filePath });
-            } catch (error) {
-                console.error('Error uploading image:', error);
-            }
         }
     };
 
@@ -80,7 +46,7 @@ const MyCollection = () => {
         const token = localStorage.getItem('token');
         try {
             const response = await axios.post(
-                'https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Collection',
+                'https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Collection?fileType=Images',
                 {
                     name: collectionName,
                     description,
@@ -103,8 +69,6 @@ const MyCollection = () => {
             setDescription('');
             setCategory('');
             setImageId(null);
-            setFileName('');
-            setFilePath('');
             closeModal();
         } catch (error) {
             console.error('Error creating collection:', error);
@@ -222,18 +186,10 @@ const MyCollection = () => {
                                     </label>
                                     <input
                                         type="file"
-                                        id="image"
-                                        onChange={handleImageUpload}
+                                        id="image"                                     
                                         className="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:bg-gray-600 dark:border-gray-500 dark:text-white dark:placeholder-gray-400"
                                     />
-                                    {/* Display the uploaded image */}
-                                    {filePath && (
-                                        <img
-                                            src={filePath}
-                                            alt={fileName}
-                                            className="mt-4 max-h-40 object-contain"
-                                        />
-                                    )}
+                                  
                                 </div>
                             </div>
                             <button
@@ -248,23 +204,37 @@ const MyCollection = () => {
             )}
 
             {/* Display collections */}
-            <div className="mt-4">
-                {collections.map((collection) => (
-                    <div key={collection.id} className="p-4 border rounded-lg mb-4">
-                        <h4 className="text-lg font-semibold">{collection.name}</h4>
-                        <p>{collection.description}</p>
-                        <p>Category: {collection.category}</p>
-                        {/* Display collection image */}
-                        {collection.filePath && (
-                            <img
-                                src={collection.filePath}
-                                alt={collection.fileName}
-                                className="mt-2 max-h-40 object-contain"
-                            />
-                        )}
-                    </div>
-                ))}
-            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+			{collections.map((collection) => (
+				<div
+					key={collection.id}
+					className="flex flex-col bg-white border shadow-sm rounded-xl"
+				>
+					<img
+						className="w-full h-auto rounded-t-xl"
+						// collection.image.filePath dan foydalanamiz
+						src={
+							collection.image
+								? `https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/{collection.image.filePath}`
+								: "https://images.unsplash.com/photo-1680868543815-b8666dba60f7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=320&q=80"
+						}
+						alt={collection.name}
+					/>
+					<div className="p-4 md:p-5">
+						<h3 className="text-lg font-bold text-gray-800">
+							{collection.name}
+						</h3>
+						<p className="mt-1 text-gray-500">{collection.description}</p>
+						<a
+							className="mt-2 py-2 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+							href="/"
+						>
+							Go somewhere
+						</a>
+					</div>
+				</div>
+			))}
+						</div>
         </div>
     );
 };

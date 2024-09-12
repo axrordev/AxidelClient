@@ -38,7 +38,7 @@ const HomePage = () => {
 						// collection.image.filePath dan foydalanamiz
 						src={
 							collection.image
-								? `https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net${collection.image.filePath}`
+								? `https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/{collection.image.filePath}`
 								: "https://images.unsplash.com/photo-1680868543815-b8666dba60f7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=320&q=80"
 						}
 						alt={collection.name}
