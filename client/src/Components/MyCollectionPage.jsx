@@ -46,39 +46,39 @@ const MyCollection = () => {
     };
 
 		useEffect(() => {
-			
 			const fetchCollections = async () => {
-				const token = localStorage.getItem('token');
-				const userId = getUserIdFromToken(token); // Token ichidan user Id ni olish
-		
-				if (!userId) {
-						console.error('User ID not found in token.');
-						return;
-				}
-		
-				try {
-						const response = await axios.get(
-								"https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Collection"
-						);
-		
-						console.log('API response:', response.data); // Log the response to check its structure
-		
-						// Access response.data.data instead of response.data
-						if (Array.isArray(response.data.data)) {
-								// Faqat userId ga mos keladigan kolleksiyalarni filtrlash
-								const collections = response.data.data.filter(collection => collection.user.id === userId);
-								setCollections(collections);
-						} else {
-								console.error("Expected an array but got:", response.data.data);
-						}
-				} catch (error) {
-						console.error("Error fetching collections:", error);
-				}
-		};
-		
+					const token = localStorage.getItem('token');
+					const userId = getUserIdFromToken(token);
+	
+					if (!userId) {
+							console.error('User ID not found in token.');
+							return;
+					}
+	
+					try {
+							const response = await axios.get(
+									"https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Collection"
+							);
+	
+							if (Array.isArray(response.data.data)) {
+									console.log("Fetched collections:", response.data.data); // Debug: check fetched collections
+	
+									// Filter collections based on userId
+									const filteredCollections = response.data.data.filter(collection => collection.user.id === userId);
+	
+									console.log("Filtered collections:", filteredCollections); // Debug: check filtered collections
+									setCollections(filteredCollections);
+							} else {
+									console.error("Expected an array but got:", response.data.data);
+							}
+					} catch (error) {
+							console.error("Error fetching collections:", error);
+					}
+			};
 	
 			fetchCollections();
-		}, []);
+	}, []);
+	
 
     const handleSubmit = async (event) => {
 			event.preventDefault();
