@@ -81,45 +81,50 @@ const MyCollection = () => {
 	}, []);
 	
 
-    const handleSubmit = async (event) => {        
-        const token = localStorage.getItem('token');
-        try {
-            // Create FormData to handle file upload
-            const formData = new FormData();
-            formData.append('name', collectionName);
-            formData.append('description', description);
-            formData.append('category', category);
-            formData.append('userId', getUserIdFromToken());
+	const handleSubmit = async (event) => {
+    event.preventDefault();
 
-            // Append the file to FormData if a file was selected
-            if (file) {
-                formData.append('file', file); // Assuming backend expects the field as 'file'
-            }
+    const token = localStorage.getItem('token');
+    try {
+        // Create FormData to handle file upload
+        const formData = new FormData();
+        formData.append('name', collectionName);
+        formData.append('description', description);
+        formData.append('category', category);
+        formData.append('userId', getUserIdFromToken());
 
-            const response = await axios.post(
-                'https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Collection?fileType=Images',
-                formData,  // Send FormData instead of a JSON object
-                {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'multipart/form-data',  // Set the correct content type
-                    },
-                }
-            );
-
-            // Add the newly created collection to the list of collections
-            setCollections([...collections, response.data]);
-
-            // Clear form and close modal
-            setCollectionName('');
-            setDescription('');
-            setCategory('');
-            setFile(null); // Clear the file input after submit
-            closeModal();
-        } catch (error) {
-            console.error('Error creating collection:', error);
+        // Append the file to FormData if a file was selected
+        if (file) {
+            formData.append('file', file); // Assuming backend expects the field as 'file'
         }
-    };
+
+        const response = await axios.post(
+            'https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Collection?fileType=Images',
+            formData,  // Send FormData instead of a JSON object
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data',  // Set the correct content type
+                },
+            }
+        );
+
+        // After a successful response, you can append the new collection to the list of collections
+        const newCollection = response.data.data; // Assuming the response has the collection data in 'data'
+
+        setCollections(prevCollections => [...prevCollections, newCollection]); // Add the new collection to the current state
+
+        // Clear form and close modal
+        setCollectionName('');
+        setDescription('');
+        setCategory('');
+        setFile(null); // Clear the file input after submit
+        closeModal();
+    } catch (error) {
+        console.error('Error creating collection:', error);
+    }
+};
+
 
     return (
         <div>
