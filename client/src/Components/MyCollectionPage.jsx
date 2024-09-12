@@ -32,49 +32,49 @@ const MyCollection = () => {
         }
     };
 
-    const getUserIdFromToken = (token) => {
-        try {
-            const payloadBase64Url = token.split('.')[1];
-            const payloadBase64 = payloadBase64Url.replace(/-/g, '+').replace(/_/g, '/');
-            const decodedPayload = atob(payloadBase64);
-            const payload = JSON.parse(decodedPayload);
-            return payload.Id;
-        } catch (error) {
-            console.error('Error decoding token:', error);
-            return null;
-        }
-    };
+		const getUserIdFromToken = (token) => {
+			try {
+					const payloadBase64Url = token.split('.')[1];
+					const payloadBase64 = payloadBase64Url.replace(/-/g, '+').replace(/_/g, '/');
+					const decodedPayload = atob(payloadBase64);
+					const payload = JSON.parse(decodedPayload);
+					return payload.id; // Case-sensitive: id or Id?
+			} catch (error) {
+					console.error('Error decoding token:', error);
+					return null;
+			}
+	};
+
 
 		useEffect(() => {
 			const fetchCollections = async () => {
-					const token = localStorage.getItem('token');
-					const userId = getUserIdFromToken(token);
-	
-					if (!userId) {
-							console.error('User ID not found in token.');
-							return;
-					}
-	
-					try {
-							const response = await axios.get(
-									"https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Collection"
-							);
-	
-							if (Array.isArray(response.data.data)) {
-									console.log("Fetched collections:", response.data.data); // Debug: check fetched collections
-	
-									// Filter collections based on userId
-									const filteredCollections = response.data.data.filter(collection => collection.user.id === userId);
-	
-									console.log("Filtered collections:", filteredCollections); // Debug: check filtered collections
-									setCollections(filteredCollections);
-							} else {
-									console.error("Expected an array but got:", response.data.data);
-							}
-					} catch (error) {
-							console.error("Error fetching collections:", error);
-					}
-			};
+				const token = localStorage.getItem('token');
+				const userId = getUserIdFromToken(token);
+		
+				if (!userId) {
+						console.error('User ID not found in token.');
+						return;
+				}
+		
+				try {
+						const response = await axios.get(
+								"https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Collection"
+						);
+		
+						console.log("API Response:", response.data);
+		
+						if (Array.isArray(response.data.data)) {
+								const filteredCollections = response.data.data.filter(collection => collection.user.id === userId);
+								console.log("Filtered collections:", filteredCollections);
+								setCollections(filteredCollections);
+						} else {
+								console.error("Expected an array but got:", response.data.data);
+						}
+				} catch (error) {
+						console.error("Error fetching collections:", error);
+				}
+		};
+		
 	
 			fetchCollections();
 	}, []);
@@ -111,6 +111,7 @@ const MyCollection = () => {
 					// Add the newly created collection to the list of collections
 					setCollections([...collections, response.data]);
 	
+
 					// Clear form and close modal
 					setCollectionName('');
 					setDescription('');
