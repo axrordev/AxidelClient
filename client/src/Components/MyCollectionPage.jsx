@@ -63,9 +63,7 @@ const MyCollection = () => {
 							const response = await axios.get(
 									"https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Collection"
 							);
-	
-							console.log("API Response:", response.data);
-	
+
 							if (Array.isArray(response.data.data)) {									
 									const filteredCollections = response.data.data.filter(
 											collection => collection.user.id.toString() === userId.toString()
@@ -129,7 +127,7 @@ const MyCollection = () => {
         <div>
             <button
                 onClick={openModal}
-                className="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                className="m-4 block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 type="button"
             >
                 Create Collection
@@ -253,7 +251,7 @@ const MyCollection = () => {
                     </div>
                 </div>
             )}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 	{collections.map((collection) => (
 		<div
 			key={collection.id}
