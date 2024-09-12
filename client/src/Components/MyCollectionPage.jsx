@@ -46,6 +46,7 @@ const MyCollection = () => {
     };
 
 		useEffect(() => {
+			
 			const fetchCollections = async () => {
 				const token = localStorage.getItem('token');
 				const userId = getUserIdFromToken(token); // Token ichidan user Id ni olish
@@ -60,6 +61,8 @@ const MyCollection = () => {
 								"https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Collection"
 						);
 		
+						console.log('API response:', response.data); // Log the response to check its structure
+		
 						// Access response.data.data instead of response.data
 						if (Array.isArray(response.data.data)) {
 								// Faqat userId ga mos keladigan kolleksiyalarni filtrlash
@@ -72,7 +75,6 @@ const MyCollection = () => {
 						console.error("Error fetching collections:", error);
 				}
 		};
-		
 		
 	
 			fetchCollections();
