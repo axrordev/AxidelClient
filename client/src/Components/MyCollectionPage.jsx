@@ -49,29 +49,30 @@ const MyCollection = () => {
 			const fetchCollections = async () => {
 				const token = localStorage.getItem('token');
 				const userId = getUserIdFromToken(token); // Token ichidan user Id ni olish
-	
+		
 				if (!userId) {
-					console.error('User ID not found in token.');
-					return;
+						console.error('User ID not found in token.');
+						return;
 				}
-	
+		
 				try {
-					const response = await axios.get(
-						"https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Collection"
-					);
-					const data = response.data;
-	
-					if (Array.isArray(data.data)) {
-						// Faqat userId ga mos keladigan kolleksiyalarni filtrlash
-						const collections = data.data.filter(collection => collection.user.id === userId);
-						setCollections(collections);
-				} else {
-						console.error("Expected an array but got:", data.data);
-				}
+						const response = await axios.get(
+								"https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Collection"
+						);
+		
+						// Directly use the response.data
+						if (Array.isArray(response.data)) {
+								// Faqat userId ga mos keladigan kolleksiyalarni filtrlash
+								const collections = response.data.filter(collection => collection.user.id === userId);
+								setCollections(collections);
+						} else {
+								console.error("Expected an array but got:", response.data);
+						}
 				} catch (error) {
-					console.error("Error fetching collections:", error);
+						console.error("Error fetching collections:", error);
 				}
-			};
+		};
+		
 	
 			fetchCollections();
 		}, []);
