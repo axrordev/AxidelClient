@@ -32,23 +32,26 @@ const MyCollection = () => {
         }
     };
 
-    const getUserIdFromToken = () => {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            console.error('No token found');
-            return null;
-        }
 
-        try {
-            const decodedToken = jwtDecode(token); // Decode the token
-            const userId = decodedToken.userId; // Adjust this based on your token structure
-            return userId;
-        } catch (error) {
-            console.error('Error decoding token:', error);
-            return null;
-        }
-    };
 
+		const getUserIdFromToken = () => {
+				const token = localStorage.getItem('token'); // Get token from local storage
+				if (!token) {
+						console.error('No token found');
+						return null;
+				}
+		
+				try {
+						const decodedToken = jwtDecode(token); // Decode the token
+						const userId = decodedToken.Id; // Extract the 'Id' from the decoded token
+						console.log(userId)
+						return userId;
+				} catch (error) {
+						console.error('Error decoding token:', error);
+						return null;
+				}
+		};
+		
     useEffect(() => {
         const fetchCollections = async () => {
             const userId = getUserIdFromToken();
