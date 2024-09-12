@@ -53,11 +53,11 @@ const MyCollection = () => {
 		
 				if (!userId) {
 						console.error('User ID not found in token.');
-						return;
+						
 				}
 				if (!token) {
 					console.error('token not found .');
-					return;
+					
 			}else
 			{console.log(token)}
 		
