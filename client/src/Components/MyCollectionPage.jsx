@@ -6,7 +6,6 @@ const MyCollection = () => {
     const [collectionName, setCollectionName] = useState('');
     const [description, setDescription] = useState('');
     const [category, setCategory] = useState('');
-    const [imageId, setImageId] = useState(null);
     const [collections, setCollections] = useState([]); // State to store collections
     const modalRef = useRef(null);
 
@@ -41,40 +40,41 @@ const MyCollection = () => {
     };
 
     const handleSubmit = async (event) => {
-        event.preventDefault();
-
-        const token = localStorage.getItem('token');
-        try {
-            const response = await axios.post(
-                'https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Collection?fileType=Images',
-                {
-                    name: collectionName,
-                    description,
-                    category,
-                    imageId,
-                    userId: getUserIdFromToken(token)
-                },
-                {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                }
-            );
-            
-            // Add the newly created collection to the list of collections
-            setCollections([...collections, response.data]);
-
-            // Clear form and close modal
-            setCollectionName('');
-            setDescription('');
-            setCategory('');
-            setImageId(null);
-            closeModal();
-        } catch (error) {
-            console.error('Error creating collection:', error);
-        }
-    };
-
+			event.preventDefault();
+	
+			const token = localStorage.getItem('token');
+			try {
+					// Create FormData to handle file upload
+					const formData = new FormData();
+					formData.append('name', collectionName);
+					formData.append('description', description);
+					formData.append('category', category);
+					formData.append('userId', getUserIdFromToken(token));
+	
+					const response = await axios.post(
+							'https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Collection?fileType=Images',
+							formData,  // Send FormData instead of a JSON object
+							{
+									headers: {
+											'Authorization': `Bearer ${token}`,
+											'Content-Type': 'multipart/form-data',  // Set the correct content type
+									},
+							}
+					);
+	
+					// Add the newly created collection to the list of collections
+					setCollections([...collections, response.data]);
+	
+					// Clear form and close modal
+					setCollectionName('');
+					setDescription('');
+					setCategory('');
+					closeModal();
+			} catch (error) {
+					console.error('Error creating collection:', error);
+			}
+	};
+	
     return (
         <div>
             <button
