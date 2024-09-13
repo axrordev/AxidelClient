@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
+
 const MyCollection = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [collectionName, setCollectionName] = useState("");
@@ -8,6 +10,7 @@ const MyCollection = () => {
 	const [category, setCategory] = useState("");
 	const [collections, setCollections] = useState([]); // State to store collections
 	const [file, setFile] = useState(null);
+	const navigate = useNavigate();
 
 	const handleFileChange = (event) => {
 		setFile(event.target.files[0]);
@@ -120,6 +123,10 @@ const MyCollection = () => {
 		} catch (error) {
 			console.error("Error creating collection:", error);
 		}
+	};
+
+	const handleViewItems = (collectionId) => {
+		navigate(`/items/${collectionId}`);
 	};
 
 	return (
@@ -256,12 +263,11 @@ const MyCollection = () => {
 			<div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 				{collections.map((collection) => (
 					<div
-						key={collection.id}
+						key={collection.id} // Bu yerda key atributi har bir element uchun noyob bo'lishi kerak
 						className="flex flex-col bg-white border shadow-sm rounded-xl h-full"
 					>
 						<img
 							className="w-full h-48 object-cover rounded-t-xl"
-							// collection.image.filePath dan foydalanamiz
 							src={
 								collection.image
 									? `https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/${collection.image.filePath}`
@@ -274,12 +280,12 @@ const MyCollection = () => {
 								{collection.name}
 							</h3>
 							<p className="mt-1 text-gray-500">{collection.description}</p>
-							<a
+							<button
 								className="mt-2 py-2 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-								href="/"
+								onClick={() => handleViewItems(collection.id)} // Collection IDni olish uchun
 							>
-								Go somewhere
-							</a>
+								View Items
+							</button>
 						</div>
 					</div>
 				))}
