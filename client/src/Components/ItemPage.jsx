@@ -27,29 +27,48 @@ const ItemPage = () => {
 	// Yangi item yaratish funksiyasi
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-
+	
 		const newItem = {
 			name: itemName,
-			collectionId: parseInt(collectionId) // URL dan olingan collectionId ni ishlatamiz
+			collectionId: parseInt(collectionId, 10),
 		};
-
+	
 		try {
+			const token = localStorage.getItem("authToken"); // Auth tokenni localStorage yoki contextdan oling
+	
 			const response = await axios.post(
 				"https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Items",
-				newItem
+				newItem,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`, // Tokenni Authorization headerga qo'shing
+					},
+				}
 			);
 			console.log("Item created successfully:", response.data);
 			setItemName("");
-
+	
 			// Yangi item qo'shilgandan keyin itemlarni qayta yuklash
 			const updatedItemsResponse = await axios.get(
-				`https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Items?collectionId=${collectionId}`
+				`https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Items?collectionId=${collectionId}`,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`, // Bu yerda ham token yuborishni unutmang
+					},
+				}
 			);
 			setItems(updatedItemsResponse.data.data);
 		} catch (error) {
-			console.error("Error creating item:", error);
+			if (error.response) {
+				console.error("Response error:", error.response.data);
+			} else if (error.request) {
+				console.error("Request error:", error.request);
+			} else {
+				console.error("General error:", error.message);
+			}
 		}
 	};
+	
 
 	return (
 		<div>
