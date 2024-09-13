@@ -15,6 +15,7 @@ const ItemPage = () => {
 					`https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Items?collectionId=${collectionId}`
 				);
 				setItems(itemResponse.data.data); // Itemlarni saqlash
+				console.log(itemResponse.data); 
 			} catch (error) {
 				console.error("Error fetching items:", error);
 			}
@@ -29,7 +30,7 @@ const ItemPage = () => {
 
 		const newItem = {
 			name: itemName,
-			collectionId: parseFloat(collectionId) // URL dan olingan collectionId ni ishlatamiz
+			collectionId: parseInt(collectionId) // URL dan olingan collectionId ni ishlatamiz
 		};
 
 		try {
