@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import jwtDecode from "jwt-decode"; // Make sure jwtDecode is correctly imported
+import {jwtDecode} from "jwt-decode"; // Make sure jwtDecode is correctly imported
 
 const ItemPage = () => {
 	const [items, setItems] = useState([]); // Initialize items as an empty array
