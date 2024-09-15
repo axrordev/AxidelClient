@@ -85,7 +85,7 @@ const ItemPage = () => {
 	};
 
 	return (
-		<div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+		<div>
 			{/* Form to create a new item */}
 			<h2>Create New Item</h2>
 			<form onSubmit={handleSubmit}>
@@ -99,23 +99,25 @@ const ItemPage = () => {
 				/>
 				<button type="submit">Create Item</button>
 			</form>
-
-			{items.map((item) => (
-				<div
-					key={item.id}
-					className="flex flex-col bg-white border shadow-sm rounded-xl h-full"
-				>
-					<div className="p-4 md:p-5 flex-grow">
-						<h3 className="text-lg font-bold text-gray-800">{item.name}</h3>
-						<a
-							className="mt-2 py-2 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-							href="/"
-						>
-							View Item
-						</a>
+			
+			<div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+				{items.map((item) => (
+					<div
+						key={item.id}
+						className="flex flex-col bg-white border shadow-sm rounded-xl h-full"
+					>
+						<div className="p-4 md:p-5 flex-grow">
+							<h3 className="text-lg font-bold text-gray-800">{item.name}</h3>
+							<a
+								className="mt-2 py-2 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+								href="/"
+							>
+								View Item
+							</a>
+						</div>
 					</div>
-				</div>
-			))}
+				))}
+			</div>
 		</div>
 	);
 };
