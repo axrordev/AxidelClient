@@ -87,7 +87,6 @@ const ItemPage = () => {
 	return (
 		<div>
 			<div className="p-4 max-w-lg mx-auto bg-white shadow-md rounded-lg">
-				<h2 className="text-2xl font-bold mb-4">Create New Item</h2>
 				<form
 					onSubmit={handleSubmit}
 					className="space-y-4"
