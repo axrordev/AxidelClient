@@ -86,19 +86,36 @@ const ItemPage = () => {
 
 	return (
 		<div>
-			{/* Form to create a new item */}
-			<h2>Create New Item</h2>
-			<form onSubmit={handleSubmit}>
-				<label htmlFor="itemName">Item Name:</label>
-				<input
-					type="text"
-					id="itemName"
-					value={itemName}
-					onChange={(e) => setItemName(e.target.value)}
-					required
-				/>
-				<button type="submit">Create Item</button>
-			</form>
+			<div className="p-4 max-w-lg mx-auto bg-white shadow-md rounded-lg">
+				<h2 className="text-2xl font-bold mb-4">Create New Item</h2>
+				<form
+					onSubmit={handleSubmit}
+					className="space-y-4"
+				>
+					<div>
+						<label
+							htmlFor="itemName"
+							className="block text-sm font-medium text-gray-700"
+						>
+							Item Name:
+						</label>
+						<input
+							type="text"
+							id="itemName"
+							value={itemName}
+							onChange={(e) => setItemName(e.target.value)}
+							required
+							className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+						/>
+					</div>
+					<button
+						type="submit"
+						className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+					>
+						Create Item
+					</button>
+				</form>
+			</div>
 
 			<div className="p-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
 				{items.map((item) => (
