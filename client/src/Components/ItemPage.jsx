@@ -4,7 +4,7 @@ import axios from "axios";
 import {jwtDecode} from "jwt-decode"; // Make sure jwtDecode is correctly imported
 
 const ItemPage = () => {
-	const [items, setItems] = useState([]); // Initialize items as an empty array
+	const [items, setItems] = useState([]); // Store only items
 	const [itemName, setItemName] = useState("");
 	const { collectionId } = useParams(); // Get collectionId from the URL
 
@@ -33,7 +33,7 @@ const ItemPage = () => {
 				const response = await axios.get(
 					`https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Collection/${collectionId}`
 				);
-				setItems(response.data.items || []); // Ensure 'items' is always an array
+				setItems(response.data.items); // Set only items from the collection
 				console.log(response.data.items); // Check the data structure
 			} catch (error) {
 				console.error("Error fetching items:", error);
@@ -78,7 +78,7 @@ const ItemPage = () => {
 			const updatedItemsResponse = await axios.get(
 				`https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Collection/${collectionId}`
 			);
-			setItems(updatedItemsResponse.data.items || []); // Ensure 'items' is always an array
+			setItems(updatedItemsResponse.data.items); // Update the items list
 		} catch (error) {
 			console.error("Error creating item:", error);
 		}
@@ -88,20 +88,16 @@ const ItemPage = () => {
 		<div>
 			<h1>Items in Collection {collectionId}</h1>
 
-			{/* Check if items are available */}
-			{items.length > 0 ? (
-				<ul>
-					{items.map((item) => (
-						<li key={item.id}>
-							<h3>{item.name}</h3>
-							<p>Author: {item.user.firstName} {item.user.lastName}</p>
-							<p>Email: {item.user.email}</p>
-						</li>
-					))}
-				</ul>
-			) : (
-				<p>No items available in this collection.</p> // Fallback message if no items
-			)}
+			{/* List the items from the collection */}
+			<ul>
+				{items.map((item) => (
+					<li key={item.id}>
+						<h3>{item.name}</h3>
+						<p>Author: {item.user.firstName} {item.user.lastName}</p>
+						<p>Email: {item.user.email}</p>
+					</li>
+				))}
+			</ul>
 
 			{/* Form to create a new item */}
 			<h2>Create New Item</h2>
