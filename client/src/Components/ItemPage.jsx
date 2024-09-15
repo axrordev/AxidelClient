@@ -86,7 +86,7 @@ const ItemPage = () => {
 
 	return (
 		<div>
-			<div className="p-4 max-w-lg mx-auto bg-white shadow-md rounded-lg">
+			<div className="p-4 max-w-lg mx-auto bg-white shadow-md rounded-lg dark:bg-gray-800">
 				<form
 					onSubmit={handleSubmit}
 					className="space-y-4"
@@ -94,7 +94,7 @@ const ItemPage = () => {
 					<div>
 						<label
 							htmlFor="itemName"
-							className="block text-sm font-medium text-gray-700"
+							className="block text-sm font-medium text-gray-700 dark:text-gray-300"
 						>
 							Item Name:
 						</label>
@@ -104,7 +104,7 @@ const ItemPage = () => {
 							value={itemName}
 							onChange={(e) => setItemName(e.target.value)}
 							required
-							className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+							className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm bg-white text-gray-900 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
 						/>
 					</div>
 					<button
@@ -120,12 +120,14 @@ const ItemPage = () => {
 				{items.map((item) => (
 					<div
 						key={item.id}
-						className="flex flex-col bg-white border shadow-sm rounded-xl h-full"
+						className="flex flex-col bg-white border shadow-sm rounded-xl h-full dark:bg-gray-900 dark:border-gray-700"
 					>
 						<div className="p-4 md:p-5 flex-grow">
-							<h3 className="text-lg font-bold text-gray-800">{item.name}</h3>
+							<h3 className="text-lg font-bold text-gray-800 dark:text-gray-100">
+								{item.name}
+							</h3>
 							<a
-								className="mt-2 py-2 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+								className="mt-2 py-2 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-blue-700 dark:hover:bg-blue-800"
 								href="/"
 							>
 								View Item
