@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
 	const [collections, setCollections] = useState([]);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const fetchCollections = async () => {
@@ -26,6 +28,10 @@ const HomePage = () => {
 		fetchCollections();
 	}, []);
 
+	const handleViewItems = (collectionId) => {
+		navigate(`/items/${collectionId}`);
+	};
+	
 	return (
 		<div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 		{collections.map((collection) => (
@@ -48,12 +54,12 @@ const HomePage = () => {
 						{collection.name}
 					</h3>
 					<p className="mt-1 text-gray-500">{collection.description}</p>
-					<a
-						className="mt-2 py-2 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-						href="/"
-					>
-						Go somewhere
-					</a>
+					<button
+								className="mt-2 py-2 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+								onClick={() => handleViewItems(collection.id)} // Collection IDni olish uchun
+							>
+								View Items
+							</button>
 				</div>
 			</div>
 		))}
