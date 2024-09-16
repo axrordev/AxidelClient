@@ -145,6 +145,7 @@ const ItemPage = () => {
 		}
 	};
 
+
 	return (
 		<div>
 			<div className="p-4 max-w-lg mx-auto bg-white shadow-md rounded-lg dark:bg-gray-800">
@@ -202,29 +203,29 @@ const ItemPage = () => {
 						{/* Comments */}
 						<div className="mt-4">
 							<h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Comments:</h3>
-							<div className="space-y-2">
+							<div className="space-y-4">
 								{comments.length > 0 ? (
 									comments.map((comment) => (
-										<p key={comment.id} className="text-sm text-gray-600 dark:text-gray-300">
-											{comment.text}
-										</p>
+										<div key={comment.id} className="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
+											<p className="text-sm font-semibold text-gray-800 dark:text-gray-100">{comment.user.firstName}</p> {/* User firstName */}
+											<p className="text-sm text-gray-600 dark:text-gray-300">{comment.text}</p> {/* Comment text */}
+										</div>
 									))
 								) : (
-									<p className="text-sm text-gray-500 dark:text-gray-400">No comments yet.</p>
+									<p className="text-sm text-gray-600 dark:text-gray-300">No comments yet.</p>
 								)}
 							</div>
 						</div>
 
-						{/* Add comment section for logged-in users */}
-						{getUserIdFromToken() && (
+						{/* New comment form */}
+						{localStorage.getItem("token") && (
 							<form onSubmit={handleCommentSubmit} className="mt-4">
-								<input
-									type="text"
+								<textarea
 									value={newComment}
 									onChange={(e) => setNewComment(e.target.value)}
-									placeholder="Write a comment"
 									required
-									className="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100"
+									className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm bg-white text-gray-900 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+									placeholder="Add your comment"
 								/>
 								<button
 									type="submit"
