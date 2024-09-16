@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import {jwtDecode} from "jwt-decode"; // Correct import for jwtDecode
+import { jwtDecode } from "jwt-decode"; // Correct import for jwtDecode
 
 const ItemPage = () => {
 	const [items, setItems] = useState([]);
@@ -145,13 +145,18 @@ const ItemPage = () => {
 		}
 	};
 
-
 	return (
 		<div>
 			<div className="p-4 max-w-lg mx-auto bg-white shadow-md rounded-lg dark:bg-gray-800">
-				<form onSubmit={handleSubmit} className="space-y-4">
+				<form
+					onSubmit={handleSubmit}
+					className="space-y-4"
+				>
 					<div>
-						<label htmlFor="itemName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+						<label
+							htmlFor="itemName"
+							className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+						>
 							Item Name:
 						</label>
 						<input
@@ -179,7 +184,9 @@ const ItemPage = () => {
 						className="flex flex-col bg-white border shadow-sm rounded-xl h-full dark:bg-gray-900 dark:border-gray-700"
 					>
 						<div className="p-4 md:p-5 flex-grow">
-							<h3 className="text-lg font-bold text-gray-800 dark:text-gray-100">{item.name}</h3>
+							<h3 className="text-lg font-bold text-gray-800 dark:text-gray-100">
+								{item.name}
+							</h3>
 							<button
 								className="mt-2 py-2 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
 								onClick={() => handleViewItem(item)}
@@ -193,79 +200,81 @@ const ItemPage = () => {
 
 			{/* Modal for viewing item and comments */}
 			{selectedItem && (
-	<div
-		className="fixed inset-0 flex items-center justify-center z-50 modal-overlay bg-gray-800 bg-opacity-75"
-		onClick={closeModalOnOutsideClick} // Close modal on click outside content
-	>
-		<div
-			className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-md w-full h-full overflow-hidden"
-			onClick={(e) => e.stopPropagation()}
-		>
-			<h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
-				{selectedItem.name}
-			</h2>
-
-			{/* Comments */}
-			<div className="mt-4">
-				<h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-					Comments:
-				</h3>
-
-				{/* Scrollable comments section */}
 				<div
-					className="space-y-4 mt-2 max-h-64 overflow-y-auto p-2 bg-gray-50 dark:bg-gray-700 rounded-lg"
+					className="fixed inset-0 flex items-center justify-center z-50 modal-overlay bg-gray-800 bg-opacity-75"
+					onClick={closeModalOnOutsideClick} // Close modal on click outside content
 				>
-					{comments.length > 0 ? (
-						comments.map((comment) => (
-							<div
-								key={comment.id}
-								className="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg"
-							>
-								<p className="text-sm font-semibold text-gray-800 dark:text-gray-100">
-									{comment.user.firstName}
-								</p>
-								<p className="text-sm text-gray-600 dark:text-gray-300">
-									{comment.text}
-								</p>
-							</div>
-						))
-					) : (
-						<p className="text-sm text-gray-600 dark:text-gray-300">
-							No comments yet.
-						</p>
-					)}
-				</div>
-			</div>
-
-			{/* New comment form */}
-			{localStorage.getItem("token") && (
-				<form onSubmit={handleCommentSubmit} className="mt-4">
-					<textarea
-						value={newComment}
-						onChange={(e) => setNewComment(e.target.value)}
-						required
-						className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm bg-white text-gray-900 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-						placeholder="Add your comment"
-					/>
-					<button
-						type="submit"
-						className="mt-2 w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+					<div
+						className={`bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md sm:max-w-full sm:w-full h-full overflow-hidden ${
+							window.innerWidth < 640 ? "w-full" : "max-w-md"
+						}`}
+						onClick={(e) => e.stopPropagation()}
 					>
-						Add Comment
-					</button>
-				</form>
+						<h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
+							{selectedItem.name}
+						</h2>
+
+						{/* Comments */}
+						<div className="mt-4">
+							<h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+								Comments:
+							</h3>
+
+							{/* Scrollable comments section */}
+							<div className="space-y-4 mt-2 max-h-[60vh] overflow-y-auto p-2 bg-gray-50 dark:bg-gray-700 rounded-lg">
+								{comments.length > 0 ? (
+									comments.map((comment) => (
+										<div
+											key={comment.id}
+											className="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg"
+										>
+											<p className="text-sm font-semibold text-gray-800 dark:text-gray-100">
+												{comment.user.firstName}
+											</p>
+											<p className="text-sm text-gray-600 dark:text-gray-300">
+												{comment.text}
+											</p>
+										</div>
+									))
+								) : (
+									<p className="text-sm text-gray-600 dark:text-gray-300">
+										No comments yet.
+									</p>
+								)}
+							</div>
+						</div>
+
+						{/* New comment form */}
+						{localStorage.getItem("token") && (
+							<form
+								onSubmit={handleCommentSubmit}
+								className="mt-4"
+							>
+								<textarea
+									value={newComment}
+									onChange={(e) => setNewComment(e.target.value)}
+									required
+									className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm bg-white text-gray-900 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+									placeholder="Add your comment"
+								/>
+								<button
+									type="submit"
+									className="mt-2 w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+								>
+									Add Comment
+								</button>
+							</form>
+						)}
+
+						<button
+							className="mt-4 py-2 px-4 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+							onClick={() => setSelectedItem(null)} // Close modal
+						>
+							Close
+						</button>
+					</div>
+				</div>
 			)}
-
-			<button
-				className="mt-4 py-2 px-4 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
-				onClick={() => setSelectedItem(null)} // Close modal
-			>
-				Close
-			</button>
-		</div>
-	</div>
-)}
-
 		</div>
 	);
 };
