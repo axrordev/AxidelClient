@@ -205,9 +205,7 @@ const ItemPage = () => {
 					onClick={closeModalOnOutsideClick} // Close modal on click outside content
 				>
 					<div
-						className={`bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md sm:max-w-full sm:w-full h-full overflow-hidden ${
-							window.innerWidth < 640 ? "w-full" : "max-w-md"
-						}`}
+						className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md sm:max-w-md sm:w-full h-full overflow-hidden"
 						onClick={(e) => e.stopPropagation()}
 					>
 						<h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
