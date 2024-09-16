@@ -51,7 +51,7 @@ const ItemPage = () => {
 			const response = await axios.get(
 				`https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Comments/item/${itemId}`, // Updated GET URL
 			);
-			setComments(response.data || []);
+			setComments(response.data.data || []);
 		} catch (error) {
 			console.error("Error fetching comments:", error);
 		}
