@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode"; // Correct import for jwtDecode
+import {jwtDecode} from "jwt-decode"; // Correct import for jwtDecode
 
 const ItemPage = () => {
 	const [items, setItems] = useState([]);
@@ -51,7 +51,7 @@ const ItemPage = () => {
 			const response = await axios.get(
 				`https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Comments/item/${itemId}`, // Updated GET URL
 			);
-			setComments(response.data.data || []);
+			setComments(response.data || []);
 		} catch (error) {
 			console.error("Error fetching comments:", error);
 		}
@@ -138,6 +138,13 @@ const ItemPage = () => {
 		}
 	};
 
+	// Function to close modal when clicking outside of the modal content
+	const closeModalOnOutsideClick = (e) => {
+		if (e.target.classList.contains("modal-overlay")) {
+			setSelectedItem(null);
+		}
+	};
+
 	return (
 		<div>
 			<div className="p-4 max-w-lg mx-auto bg-white shadow-md rounded-lg dark:bg-gray-800">
@@ -185,8 +192,11 @@ const ItemPage = () => {
 
 			{/* Modal for viewing item and comments */}
 			{selectedItem && (
-				<div className="fixed inset-0 flex items-center justify-center z-50">
-					<div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-md w-full">
+				<div
+					className="fixed inset-0 flex items-center justify-center z-50 modal-overlay bg-gray-800 bg-opacity-75"
+					onClick={closeModalOnOutsideClick} // Close modal on click outside content
+				>
+					<div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-md w-full" onClick={(e) => e.stopPropagation()}>
 						<h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">{selectedItem.name}</h2>
 						
 						{/* Comments */}
@@ -220,15 +230,14 @@ const ItemPage = () => {
 									type="submit"
 									className="mt-2 w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
 								>
-									Write Comment
+									Add Comment
 								</button>
 							</form>
 						)}
 
-						{/* Close button */}
 						<button
-							className="mt-4 w-full py-2 px-4 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
-							onClick={() => setSelectedItem(null)}
+							className="mt-4 py-2 px-4 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+							onClick={() => setSelectedItem(null)} // Close modal
 						>
 							Close
 						</button>
