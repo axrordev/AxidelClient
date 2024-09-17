@@ -59,8 +59,7 @@ const Navbar = () => {
 					Axidel
 				</Link>
 
-				{/* Search button in mobile size */}
-				<div className="flex-1 flex items-center justify-end md:hidden">
+				<div className="flex-1 flex items-center justify-end">
 					<button
 						type="button"
 						aria-controls="navbar-search"
@@ -114,91 +113,145 @@ const Navbar = () => {
 							</svg>
 						)}
 					</button>
-					<div
-					id="navbar-search"
-				>
-					<nav>
-						<ul
-							className={`{
+					<div id="navbar-search">
+						<nav>
+							<ul
+								className={`{
 								isSearchVisible ? "hidden" : ""
 							}`}
-						>
-							<li>
-								{isLoggedIn ? (
-									<div className="relative">
-										<img
-											src="/docs/images/people/profile-picture-5.jpg" // Profil rasmi
-											alt="User Avatar"
-											className="w-10 h-10 rounded-full cursor-pointer"
-											onClick={toggleDropdown} // Avatar tugmasiga bosilganda modalni ochish
-										/>
-										<div
-											id="userDropdown"
-											className={`z-10 ${isDropdownOpen ? 'block' : 'hidden'} bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600`}
-										>
-											<div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
-												<div>Bonnie Green</div>
-												<div className="font-medium truncate">
-													name@flowbite.com
+							>
+								<li>
+									{isLoggedIn ? (
+										<div className="relative">
+											<img
+												src="/docs/images/people/profile-picture-5.jpg" // Profil rasmi
+												alt="User Avatar"
+												className="w-10 h-10 rounded-full cursor-pointer"
+												onClick={toggleDropdown} // Avatar tugmasiga bosilganda modalni ochish
+											/>
+											<div
+												id="userDropdown"
+												className={`z-10 ${
+													isDropdownOpen ? "block" : "hidden"
+												} bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600`}
+											>
+												<div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+													<div>Bonnie Green</div>
+													<div className="font-medium truncate">
+														name@flowbite.com
+													</div>
+												</div>
+												<ul
+													className="py-2 text-sm text-gray-700 dark:text-gray-200"
+													aria-labelledby="avatarButton"
+												>
+													<li>
+														<a
+															href="/"
+															className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+														>
+															Dashboard
+														</a>
+													</li>
+													<li>
+														<a
+															href="/"
+															className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+														>
+															Settings
+														</a>
+													</li>
+													<li>
+														<a
+															href="/"
+															className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+														>
+															Earnings
+														</a>
+													</li>
+												</ul>
+												<div className="py-1">
+													<a
+														href="/"
+														onClick={handleLogout}
+														className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+													>
+														Sign out
+													</a>
 												</div>
 											</div>
-											<ul
-												className="py-2 text-sm text-gray-700 dark:text-gray-200"
-												aria-labelledby="avatarButton"
+											<div
+												id="userDropdown"
+												className={`absolute right-0 mt-2 z-50 ${
+													isDropdownOpen ? "block" : "hidden"
+												} bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600`}
 											>
-												<li>
-													<a
-														href="/"
-														className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-													>
-														Dashboard
-													</a>
-												</li>
-												<li>
-													<a
-														href="/"
-														className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-													>
-														Settings
-													</a>
-												</li>
-												<li>
-													<a
-														href="/"
-														className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-													>
-														Earnings
-													</a>
-												</li>
-											</ul>
-											<div className="py-1">
-												<a
-													href="/"
-													onClick={handleLogout}
-													className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+												<div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+													<div>Bonnie Green</div>
+													<div className="font-medium truncate">
+														name@flowbite.com
+													</div>
+												</div>
+												<ul
+													className="py-2 text-sm text-gray-700 dark:text-gray-200"
+													aria-labelledby="avatarButton"
 												>
-													Sign out
-												</a>
+													<li>
+														<a
+															href="/"
+															className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+														>
+															Dashboard
+														</a>
+													</li>
+													<li>
+														<a
+															href="/"
+															className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+														>
+															Settings
+														</a>
+													</li>
+													<li>
+														<a
+															href="/"
+															className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+														>
+															Earnings
+														</a>
+													</li>
+												</ul>
+												<div className="py-1">
+													<a
+														href="/"
+														onClick={handleLogout}
+														className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+													>
+														Sign out
+													</a>
+												</div>
 											</div>
 										</div>
-									</div>
-								) : (
-									<>
-										<Link to="/login" className="text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
-											Sign in
-										</Link>
-										<Link
-											to="/register"
-											className="text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-										>
-											Sign up
-										</Link>
-									</>
-								)}
-							</li>
-						</ul>
-					</nav>
-				</div>
+									) : (
+										<>
+											<Link
+												to="/login"
+												className="text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+											>
+												Sign in
+											</Link>
+											<Link
+												to="/register"
+												className="text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+											>
+												Sign up
+											</Link>
+										</>
+									)}
+								</li>
+							</ul>
+						</nav>
+					</div>
 				</div>
 
 				{/* Search input in mobile size */}
@@ -214,7 +267,6 @@ const Navbar = () => {
 				)}
 
 				{/* ul elements in desktop and mobile size */}
-				
 			</div>
 		</nav>
 	);
