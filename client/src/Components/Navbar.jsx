@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaRegUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
@@ -74,6 +74,24 @@ const Navbar = () => {
 						<span className="sr-only">Search</span>
 					</button>
 
+					{/* Search input in desktop size */}
+					<div className="relative hidden md:block">
+						<div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+							<FaSearch
+								className="w-4 h-4 text-gray-500 dark:text-gray-400"
+								aria-hidden="true"
+							/>
+							<span className="sr-only">Search icon</span>
+						</div>
+
+						<input
+							type="text"
+							id="search-navbar"
+							className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+							placeholder="Search..."
+						/>
+					</div>
+
 					{/* Theme button */}
 					<button
 						type="button"
@@ -124,12 +142,12 @@ const Navbar = () => {
 								<li>
 									{isLoggedIn ? (
 										<div className="relative">
-											<img
-												src="https://www.google.com/imgres?q=avatar%20user&imgurl=https%3A%2F%2Fe7.pngegg.com%2Fpngimages%2F84%2F165%2Fpng-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper.png&imgrefurl=https%3A%2F%2Fwww.pngegg.com%2Fen%2Fpng-zxkcc&docid=diHpHgcvAOmZ-M&tbnid=RdHRQ2dJN7LFaM&vet=12ahUKEwik6-rA-cmIAxVHRlUIHW2zGWAQM3oECHwQAA..i&w=900&h=512&hcb=2&ved=2ahUKEwik6-rA-cmIAxVHRlUIHW2zGWAQM3oECHwQAA" // Profil rasmi
-												alt="User Avatar"
+											<span
 												className="w-10 h-10 rounded-full cursor-pointer bg-cyan-600"
-												onClick={toggleDropdown} // Avatar tugmasiga bosilganda modalni ochish
-											/>
+												onClick={toggleDropdown}
+											>
+												<FaRegUser />
+											</span>
 											<div
 												id="userDropdown"
 												className={`absolute right-0 mt-2 z-50 ${
@@ -233,7 +251,7 @@ const Navbar = () => {
 
 				{/* Search input in mobile size */}
 				{isSearchVisible && (
-					<div className="relative w-full mt-4">
+					<div className="relative md:hidden w-full mt-4">
 						<input
 							type="text"
 							id="mobile-search-navbar"
