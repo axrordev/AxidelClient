@@ -1,17 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { FaBars, FaSearch } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
-	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 	const [isDarkMode, setIsDarkMode] = useState(false);
 	const [isSearchVisible, setIsSearchVisible] = useState(false);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-	const toggleMobileMenu = () => {
-		setIsMobileMenuOpen(!isMobileMenuOpen);
-		setIsSearchVisible(false); // Hide search input when FaBars is clicked
-	};
 
 	const toggleDarkMode = () => {
 		const newMode = !isDarkMode;
@@ -21,13 +15,12 @@ const Navbar = () => {
 
 	const toggleSearchVisibility = () => {
 		setIsSearchVisible(!isSearchVisible);
-		setIsMobileMenuOpen(false); // Close mobile menu when search is opened
 	};
 
 	const handleLogout = () => {
-		localStorage.removeItem("token"); // Remove token
+		localStorage.removeItem("token"); // Tokenni o'chirish
 		setIsLoggedIn(false);
-		window.location.reload(); // Reload the page
+		window.location.reload(); // Sahifani yangilash
 	};
 
 	useEffect(() => {
@@ -61,7 +54,7 @@ const Navbar = () => {
 					Axidel
 				</Link>
 
-				{/* Mobile search icon */}
+				{/* Search icon in mobile size */}
 				<div className="flex-1 flex items-center justify-end md:hidden">
 					<button
 						type="button"
@@ -70,15 +63,18 @@ const Navbar = () => {
 						onClick={toggleSearchVisibility}
 						className="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 me-1"
 					>
-						<FaSearch className="w-5 h-5" aria-hidden="true" />
+						<FaSearch
+							className="w-5 h-5"
+							aria-hidden="true"
+						/>
 						<span className="sr-only">Search</span>
 					</button>
 
-					{/* Dark mode button */}
+					{/**Theme button */}
 					<button
 						type="button"
 						onClick={toggleDarkMode}
-						className="relative items-center p-2 ml-2 mr-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+						className="relative  items-center p-2 ml-2 mr-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
 					>
 						<span className="sr-only">Toggle Dark Mode</span>
 						{isDarkMode ? (
@@ -113,20 +109,9 @@ const Navbar = () => {
 							</svg>
 						)}
 					</button>
-
-					<button
-						type="button"
-						className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-						aria-controls="navbar-search"
-						aria-expanded={isMobileMenuOpen}
-						onClick={toggleMobileMenu}
-					>
-						<span className="sr-only">Open main menu</span>
-						<FaBars className="w-5 h-5" aria-hidden="true" />
-					</button>
 				</div>
 
-				{/* Search input for mobile */}
+				{/* Search input in mobile size */}
 				{isSearchVisible && (
 					<div className="relative md:hidden w-full mt-4">
 						<input
@@ -138,12 +123,10 @@ const Navbar = () => {
 					</div>
 				)}
 
-				{/* Desktop and mobile menu */}
+				{/* ul elements in desktop and mobile size */}
 				<div
 					id="navbar-search"
-					className={`items-center justify-between w-full md:flex md:w-auto md:order-1 ${
-						isMobileMenuOpen ? "" : "hidden"
-					}`}
+					className={`items-center justify-between w-full md:flex md:w-auto md:order-1`}
 				>
 					<nav>
 						<ul
@@ -184,43 +167,195 @@ const Navbar = () => {
 									Services
 								</Link>
 							</li>
-							{/* Log In/Log Out button for mobile */}
-							<li className="block md:hidden">
+							<li>
 								{isLoggedIn ? (
-									<button
-										onClick={handleLogout}
-										className={`block py-2 px-3 ${
-											isDarkMode ? "text-white" : "text-gray-900"
-										} rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
-									>
-										Log Out
-									</button>
+									<div className="relative">
+										<img
+											src="/docs/images/people/profile-picture-5.jpg" // Profil rasmi
+											alt="User Avatar"
+											className="w-10 h-10 rounded-full cursor-pointer"
+											onClick={() => console.log("Avatar clicked")}
+										/>
+										<div
+											id="userDropdown"
+											class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
+										>
+											<div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
+												<div>Bonnie Green</div>
+												<div class="font-medium truncate">
+													name@flowbite.com
+												</div>
+											</div>
+											<ul
+												class="py-2 text-sm text-gray-700 dark:text-gray-200"
+												aria-labelledby="avatarButton"
+											>
+												<li>
+													<a
+														href="/"
+														class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+													>
+														Dashboard
+													</a>
+												</li>
+												<li>
+													<a
+														href="/"
+														class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+													>
+														Settings
+													</a>
+												</li>
+												<li>
+													<a
+														href="/"
+														class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+													>
+														Earnings
+													</a>
+												</li>
+											</ul>
+											<div class="py-1">
+												<a
+													href="/"
+													onClick={handleLogout}
+													class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+												>
+													Sign out
+												</a>
+											</div>
+										</div>
+									</div>
 								) : (
-									<a
-										href="/SignIn"
-										className={`block py-2 px-3 ${
-											isDarkMode ? "text-white" : "text-gray-900"
-										} rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
+									<div className="relative">
+										<img
+											src="/docs/images/people/profile-picture-5.jpg" // Profil rasmi
+											alt="User Avatar"
+											className="w-10 h-10 rounded-full cursor-pointer"
+											onClick={() => console.log("Avatar clicked")}
+										/>
+										<div
+											id="userDropdown"
+											class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
+										>
+											<div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
+												<div>Please log in </div>
+												<div class="font-medium truncate">
+													name@flowbite.com
+												</div>
+											</div>
+											<ul
+												class="py-2 text-sm text-gray-700 dark:text-gray-200"
+												aria-labelledby="avatarButton"
+											>
+												<li>
+													<a
+														href="/"
+														class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+													>
+														Dashboard
+													</a>
+												</li>
+												<li>
+													<a
+														href="/"
+														class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+													>
+														Settings
+													</a>
+												</li>
+												<li>
+													<a
+														href="/"
+														class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+													>
+														Earnings
+													</a>
+												</li>
+											</ul>
+											<div class="py-1">
+												<Link
+													to="/login"
+													class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+												>
+													Login
+												</Link>
+											</div>
+										</div>
+									</div>
+									/*
+									<Link
+										to="/login"
+										className="ml-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
 									>
-										Log In
-									</a>
+										Login
+									</Link>*/
 								)}
 							</li>
 						</ul>
 					</nav>
 				</div>
 
-				{/* Desktop search input */}
-				{isSearchVisible && (
-					<div className="relative hidden md:block md:w-auto">
+				{/* Search input, Theme button, Log In button */}
+				<div className="flex md:order-2">
+					{/* Search input in desktop size */}
+					<div className="relative hidden md:block">
+						<div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+							<FaSearch
+								className="w-4 h-4 text-gray-500 dark:text-gray-400"
+								aria-hidden="true"
+							/>
+							<span className="sr-only">Search icon</span>
+						</div>
+
 						<input
 							type="text"
 							id="search-navbar"
-							className="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+							className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
 							placeholder="Search..."
 						/>
 					</div>
-				)}
+
+					{/* Theme button in desktop size */}
+					<button
+						type="button"
+						onClick={toggleDarkMode}
+						className="relative hidden md:block items-center p-2 ml-5 -mr-5 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+					>
+						<span className="sr-only">Toggle Dark Mode</span>
+						{isDarkMode ? (
+							<svg
+								className="w-6 h-6"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth="2"
+									d="M12 3v1m4.22 1.22l.78-.78M21 12h-1m-4.22 4.22l-.78.78M12 21v-1m-4.22-1.22l-.78-.78M3 12H2m4.22-4.22l-.78-.78M12 2a10 10 0 100 20 10 10 0 000-20z"
+								/>
+							</svg>
+						) : (
+							<svg
+								className="w-6 h-6"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth="2"
+									d="M20.354 15.354A9 9 0 018.647 3.647 9 9 0 1020.354 15.354z"
+								/>
+							</svg>
+						)}
+					</button>
+				</div>
 			</div>
 		</nav>
 	);
