@@ -146,7 +146,7 @@ const Navbar = () => {
 												className="w-10 h-10 rounded-full cursor-pointer bg-cyan-600"
 												onClick={toggleDropdown}
 											>
-												<FaRegUser className="text-white w-8 h-8"/>
+												<FaRegUser className=" w-10 h-10 items-center p-2 justify-center  text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" />
 											</span>
 											<div
 												id="userDropdown"
@@ -207,7 +207,7 @@ const Navbar = () => {
 													className="w-10 h-10 rounded-full cursor-pointer bg-cyan-600"
 													onClick={toggleDropdown}
 												>
-													<FaRegUser />
+													<FaRegUser className=" w-10 h-10 items-center p-2 justify-center  text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" />
 												</span>
 												<div
 													id="userDropdown"
