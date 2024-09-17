@@ -65,7 +65,7 @@ const Navbar = () => {
 						aria-controls="navbar-search"
 						aria-expanded={isSearchVisible}
 						onClick={toggleSearchVisibility}
-						className="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 me-1"
+						className="block md:hidden text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 me-1"
 					>
 						<FaSearch
 							className="w-5 h-5"
@@ -143,10 +143,10 @@ const Navbar = () => {
 									{isLoggedIn ? (
 										<div className="relative">
 											<span
-												className="w-10 h-10 rounded-full cursor-pointer bg-cyan-600"
+												className=" rounded-full relative items-center p-2 ml-2 mr-2 w-10 h-10 justify-center text-sm text-gray-500  hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
 												onClick={toggleDropdown}
 											>
-												<FaRegUser />
+												<FaRegUser className="text-white"/>
 											</span>
 											<div
 												id="userDropdown"
@@ -203,12 +203,12 @@ const Navbar = () => {
 									) : (
 										<>
 											<div className="relative">
-												<img
-													src="https://www.google.com/imgres?q=avatar%20user&imgurl=https%3A%2F%2Fe7.pngegg.com%2Fpngimages%2F84%2F165%2Fpng-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper.png&imgrefurl=https%3A%2F%2Fwww.pngegg.com%2Fen%2Fpng-zxkcc&docid=diHpHgcvAOmZ-M&tbnid=RdHRQ2dJN7LFaM&vet=12ahUKEwik6-rA-cmIAxVHRlUIHW2zGWAQM3oECHwQAA..i&w=900&h=512&hcb=2&ved=2ahUKEwik6-rA-cmIAxVHRlUIHW2zGWAQM3oECHwQAA" // Profil rasmi
-													alt="User Avatar"
-													className="w-10 h-10 rounded-full cursor-pointer"
-													onClick={toggleDropdown} // Avatar tugmasiga bosilganda modalni ochish
-												/>
+												<span
+													className="w-10 h-10 rounded-full cursor-pointer bg-cyan-600"
+													onClick={toggleDropdown}
+												>
+													<FaRegUser />
+												</span>
 												<div
 													id="userDropdown"
 													className={`absolute right-0 mt-2 z-50 ${
