@@ -143,10 +143,10 @@ const Navbar = () => {
 									{isLoggedIn ? (
 										<div className="relative">
 											<span
-												className=" rounded-full relative items-center p-2 ml-2 mr-2 w-10 h-10 justify-center text-sm text-gray-500  hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+												className="relative items-center p-2 ml-2 mr-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
 												onClick={toggleDropdown}
 											>
-												<FaRegUser className="text-white"/>
+												<FaRegUser className="text-white" />
 											</span>
 											<div
 												id="userDropdown"
