@@ -114,24 +114,8 @@ const Navbar = () => {
 							</svg>
 						)}
 					</button>
-				</div>
-
-				{/* Search input in mobile size */}
-				{isSearchVisible && (
-					<div className="relative md:hidden w-full mt-4">
-						<input
-							type="text"
-							id="mobile-search-navbar"
-							className="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-							placeholder="Search..."
-						/>
-					</div>
-				)}
-
-				{/* ul elements in desktop and mobile size */}
-				<div
+					<div
 					id="navbar-search"
-					className={`items-center justify-between w-full md:flex md:w-auto md:order-1`}
 				>
 					<nav>
 						<ul
@@ -215,6 +199,22 @@ const Navbar = () => {
 						</ul>
 					</nav>
 				</div>
+				</div>
+
+				{/* Search input in mobile size */}
+				{isSearchVisible && (
+					<div className="relative md:hidden w-full mt-4">
+						<input
+							type="text"
+							id="mobile-search-navbar"
+							className="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+							placeholder="Search..."
+						/>
+					</div>
+				)}
+
+				{/* ul elements in desktop and mobile size */}
+				
 			</div>
 		</nav>
 	);
