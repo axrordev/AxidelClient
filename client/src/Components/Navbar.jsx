@@ -125,9 +125,9 @@ const Navbar = () => {
 									{isLoggedIn ? (
 										<div className="relative">
 											<img
-												src="/docs/images/people/profile-picture-5.jpg" // Profil rasmi
+												src="https://www.google.com/imgres?q=avatar%20user&imgurl=https%3A%2F%2Fe7.pngegg.com%2Fpngimages%2F84%2F165%2Fpng-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper.png&imgrefurl=https%3A%2F%2Fwww.pngegg.com%2Fen%2Fpng-zxkcc&docid=diHpHgcvAOmZ-M&tbnid=RdHRQ2dJN7LFaM&vet=12ahUKEwik6-rA-cmIAxVHRlUIHW2zGWAQM3oECHwQAA..i&w=900&h=512&hcb=2&ved=2ahUKEwik6-rA-cmIAxVHRlUIHW2zGWAQM3oECHwQAA" // Profil rasmi
 												alt="User Avatar"
-												className="w-10 h-10 rounded-full cursor-pointer"
+												className="w-10 h-10 rounded-full cursor-pointer bg-cyan-600"
 												onClick={toggleDropdown} // Avatar tugmasiga bosilganda modalni ochish
 											/>
 											<div
@@ -186,7 +186,7 @@ const Navbar = () => {
 										<>
 											<div className="relative">
 												<img
-													src="/docs/images/people/profile-picture-5.jpg" // Profil rasmi
+													src="https://www.google.com/imgres?q=avatar%20user&imgurl=https%3A%2F%2Fe7.pngegg.com%2Fpngimages%2F84%2F165%2Fpng-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper.png&imgrefurl=https%3A%2F%2Fwww.pngegg.com%2Fen%2Fpng-zxkcc&docid=diHpHgcvAOmZ-M&tbnid=RdHRQ2dJN7LFaM&vet=12ahUKEwik6-rA-cmIAxVHRlUIHW2zGWAQM3oECHwQAA..i&w=900&h=512&hcb=2&ved=2ahUKEwik6-rA-cmIAxVHRlUIHW2zGWAQM3oECHwQAA" // Profil rasmi
 													alt="User Avatar"
 													className="w-10 h-10 rounded-full cursor-pointer"
 													onClick={toggleDropdown} // Avatar tugmasiga bosilganda modalni ochish
@@ -215,7 +215,7 @@ const Navbar = () => {
 													</ul>
 													<div className="py-1">
 														<Link
-															to="/login"
+															to="/signin"
 															className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
 														>
 															Sign In
@@ -233,7 +233,7 @@ const Navbar = () => {
 
 				{/* Search input in mobile size */}
 				{isSearchVisible && (
-					<div className="relative md:hidden w-full mt-4">
+					<div className="relative w-full mt-4">
 						<input
 							type="text"
 							id="mobile-search-navbar"
