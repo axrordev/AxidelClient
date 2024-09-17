@@ -113,6 +113,7 @@ const Navbar = () => {
 							</svg>
 						)}
 					</button>
+
 					<div id="navbar-search">
 						<nav>
 							<ul
@@ -146,28 +147,28 @@ const Navbar = () => {
 													aria-labelledby="avatarButton"
 												>
 													<li>
-														<a
-															href="/"
+														<Link
+															to="/"
 															className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
 														>
-															Dashboard
-														</a>
+															Home
+														</Link>
 													</li>
 													<li>
-														<a
-															href="/"
+														<Link
+															to="/mycollection"
 															className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
 														>
-															Settings
-														</a>
+															My Collections
+														</Link>
 													</li>
 													<li>
-														<a
-															href="/"
+														<Link
+															to="/services"
 															className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
 														>
-															Earnings
-														</a>
+															Services
+														</Link>
 													</li>
 												</ul>
 												<div className="py-1">
@@ -183,18 +184,45 @@ const Navbar = () => {
 										</div>
 									) : (
 										<>
-											<Link
-												to="/login"
-												className="text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-											>
-												Sign in
-											</Link>
-											<Link
-												to="/register"
-												className="text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-											>
-												Sign up
-											</Link>
+											<div className="relative">
+												<img
+													src="/docs/images/people/profile-picture-5.jpg" // Profil rasmi
+													alt="User Avatar"
+													className="w-10 h-10 rounded-full cursor-pointer"
+													onClick={toggleDropdown} // Avatar tugmasiga bosilganda modalni ochish
+												/>
+												<div
+													id="userDropdown"
+													className={`absolute right-0 mt-2 z-50 ${
+														isDropdownOpen ? "block" : "hidden"
+													} bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600`}
+												>
+													<div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+														<div>Not Found</div>
+													</div>
+													<ul
+														className="py-2 text-sm text-gray-700 dark:text-gray-200"
+														aria-labelledby="avatarButton"
+													>
+														<li>
+															<Link
+																to="/"
+																className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+															>
+																Home
+															</Link>
+														</li>
+													</ul>
+													<div className="py-1">
+														<Link
+															to="/login"
+															className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+														>
+															Sign In
+														</Link>
+													</div>
+												</div>
+											</div>
 										</>
 									)}
 								</li>
