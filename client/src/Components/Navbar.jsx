@@ -67,7 +67,7 @@ const Navbar = () => {
         .then((response) => response.json())
         .then((data) => {
           if (data && data.data) {
-            setUserData(data.data);
+            setUserData(data.data.data);
           }
         })
         .catch((error) => {
