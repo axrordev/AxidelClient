@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaSearch, FaRegUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
-
+import { jwtDecode } from "jwt-decode";
 const Navbar = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
@@ -36,6 +36,22 @@ const Navbar = () => {
     setIsDropdownOpen(!isDropdownOpen); // Dropdownni ko'rsatish yoki yashirish
   };
 
+	const getUserIdFromToken = () => {
+		const token = localStorage.getItem("token"); // Get token from local storage
+		if (!token) {
+			console.error("No token found");
+			return null;
+		}
+
+		try {
+			const decodedToken = jwtDecode(token); // Decode the token
+			const userId = decodedToken.Id; // Extract the 'Id' from the decoded token
+			return userId;
+		} catch (error) {
+			console.error("Error decoding token:", error);
+			return null;
+		}
+	};
   // Dropdownni tashqi hududga bosilganda yopish
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -49,33 +65,33 @@ const Navbar = () => {
     };
   }, [dropdownRef]);
 
-  useEffect(() => {
-    const savedMode = localStorage.getItem("darkMode") === "true";
-    setIsDarkMode(savedMode);
-    document.body.className = savedMode ? "dark" : "";
-
-    const token = localStorage.getItem("token");
-    if (token) {
-      setIsLoggedIn(true);
-
-      // Foydalanuvchi ma'lumotlarini olish
-      fetch("https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Users", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data && data.data) {
-            setUserData(data.data);
-						console.log(data.data)
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching user data:", error);
-        });
-    }
-  }, []);
+	useEffect(() => {
+		const savedMode = localStorage.getItem("darkMode") === "true";
+		setIsDarkMode(savedMode);
+		document.body.className = savedMode ? "dark" : "";
+		
+		const token = localStorage.getItem("token");
+		if (token) {
+			setIsLoggedIn(true);
+			const userId = getUserIdFromToken(); // userIdni olamiz va fetchda foydalanamiz
+			// Foydalanuvchi ma'lumotlarini olish
+			fetch(`https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Users/${userId}`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			})
+				.then((response) => response.json())
+				.then((data) => {
+					if (data && data.data) {
+						setUserData(data.data);
+					}
+				})
+				.catch((error) => {
+					console.error("Error fetching user data:", error);
+				});
+		}
+	}, []);
+	
 
   useEffect(() => {
     document.body.className = isDarkMode ? "dark" : "";
