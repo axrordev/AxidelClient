@@ -115,7 +115,7 @@ const Navbar = () => {
 					Axidel
 				</Link>
 
-				<div className="flex-1 flex items-center justify-end">
+				<div className="flex-1 flex items-center justify-end ">
 					<button
 						type="button"
 						aria-controls="navbar-search"
@@ -146,6 +146,18 @@ const Navbar = () => {
 							placeholder="Search..."
 						/>
 					</div>
+
+					{/* Search input in mobile size */}
+					{isSearchVisible && (
+						<div className="relative md:hidden w-full mt-4">
+							<input
+								type="text"
+								id="mobile-search-navbar"
+								className="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+								placeholder="Search..."
+							/>
+						</div>
+					)}
 
 					{/* Theme button */}
 					<button
@@ -186,6 +198,8 @@ const Navbar = () => {
 							</svg>
 						)}
 					</button>
+
+					
 
 					<div id="navbar-search">
 						<nav>
