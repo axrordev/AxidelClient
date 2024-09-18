@@ -1,17 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { FaBars, FaSearch } from "react-icons/fa";
+import React, { useState, useEffect, useRef } from "react";
+import { FaSearch, FaRegUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
-
+import { jwtDecode } from "jwt-decode";
 const Navbar = () => {
-	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 	const [isDarkMode, setIsDarkMode] = useState(false);
 	const [isSearchVisible, setIsSearchVisible] = useState(false);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+	const [userData, setUserData] = useState(null);
 
-	const toggleMobileMenu = () => {
-		setIsMobileMenuOpen(!isMobileMenuOpen);
-		setIsSearchVisible(false); // FaBars bosilganda search input yashiriladi
-	};
+	const dropdownRef = useRef(null); // Ref for the dropdown
 
 	const toggleDarkMode = () => {
 		const newMode = !isDarkMode;
@@ -21,14 +19,51 @@ const Navbar = () => {
 
 	const toggleSearchVisibility = () => {
 		setIsSearchVisible(!isSearchVisible);
-		setIsMobileMenuOpen(false); // Search ochilganda mobile menu yopiladi
 	};
 
 	const handleLogout = () => {
 		localStorage.removeItem("token"); // Tokenni o'chirish
 		setIsLoggedIn(false);
+		setUserData(null);
 		window.location.reload(); // Sahifani yangilash
 	};
+
+	const handleDropdownItemClick = () => {
+		setIsDropdownOpen(false); // Element bosilganda dropdown yopiladi
+	};
+
+	const toggleDropdown = () => {
+		setIsDropdownOpen(!isDropdownOpen); // Dropdownni ko'rsatish yoki yashirish
+	};
+
+	const getUserIdFromToken = () => {
+		const token = localStorage.getItem("token"); // Get token from local storage
+		if (!token) {
+			console.error("No token found");
+			return null;
+		}
+
+		try {
+			const decodedToken = jwtDecode(token); // Decode the token
+			const userId = decodedToken.Id; // Extract the 'Id' from the decoded token
+			return userId;
+		} catch (error) {
+			console.error("Error decoding token:", error);
+			return null;
+		}
+	};
+	// Dropdownni tashqi hududga bosilganda yopish
+	useEffect(() => {
+		const handleClickOutside = (event) => {
+			if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+				setIsDropdownOpen(false);
+			}
+		};
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, [dropdownRef]);
 
 	useEffect(() => {
 		const savedMode = localStorage.getItem("darkMode") === "true";
@@ -38,6 +73,25 @@ const Navbar = () => {
 		const token = localStorage.getItem("token");
 		if (token) {
 			setIsLoggedIn(true);
+			const userId = getUserIdFromToken(); // userIdni olamiz va fetchda foydalanamiz
+			// Foydalanuvchi ma'lumotlarini olish
+			fetch(
+				`https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Users/${userId}`,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				},
+			)
+				.then((response) => response.json())
+				.then((data) => {
+					if (data && data.data) {
+						setUserData(data.data);
+					}
+				})
+				.catch((error) => {
+					console.error("Error fetching user data:", error);
+				});
 		}
 	}, []);
 
@@ -62,7 +116,7 @@ const Navbar = () => {
 				</Link>
 
 				{/* Search icon in mobile size */}
-				<div className="flex-1 flex items-center justify-end md:hidden">
+				<div className="flex-1 flex items-center justify-end md:hidden ">
 					<button
 						type="button"
 						aria-controls="navbar-search"
@@ -77,11 +131,11 @@ const Navbar = () => {
 						<span className="sr-only">Search</span>
 					</button>
 
-					{/**Theme button */}
+					{/* Theme button */}
 					<button
 						type="button"
 						onClick={toggleDarkMode}
-						className="relative  items-center p-2 ml-2 mr-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+						className="relative items-center p-2 ml-2 mr-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
 					>
 						<span className="sr-only">Toggle Dark Mode</span>
 						{isDarkMode ? (
@@ -115,19 +169,6 @@ const Navbar = () => {
 								/>
 							</svg>
 						)}
-					</button>
-					<button
-						type="button"
-						className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-						aria-controls="navbar-search"
-						aria-expanded={isMobileMenuOpen}
-						onClick={toggleMobileMenu}
-					>
-						<span className="sr-only">Open main menu</span>
-						<FaBars
-							className="w-5 h-5"
-							aria-hidden="true"
-						/>
 					</button>
 				</div>
 
@@ -143,163 +184,152 @@ const Navbar = () => {
 					</div>
 				)}
 
-				{/* ul elements in desktop and mobile size */}
-				<div
-					id="navbar-search"
-					className={`items-center justify-between w-full md:flex md:w-auto md:order-1 ${
-						isMobileMenuOpen ? "" : "hidden"
-					}`}
-				>
+				{/* Search input for desktop */}
+				<div className="relative hidden md:block">
+					<div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+						<FaSearch
+							className="w-4 h-4 text-gray-500 dark:text-gray-400"
+							aria-hidden="true"
+						/>
+						<span className="sr-only">Search icon</span>
+					</div>
+					<input
+						type="text"
+						id="search-navbar"
+						className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+						placeholder="Search..."
+					/>
+				</div>
+
+				<div id="navbar-search">
 					<nav>
-						<ul
-							className={`flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700 ${
-								isSearchVisible ? "hidden" : ""
-							}`}
-						>
+						<ul className={isSearchVisible ? "hidden" : ""}>
 							<li>
-								<Link
-									to="/"
-									className={`block py-2 px-3 ${
-										isDarkMode ? "text-white" : "text-gray-900"
-									} bg-${
-										isDarkMode ? "blue-700" : "white"
-									} rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500`}
-									aria-current="page"
-								>
-									Home
-								</Link>
-							</li>
-							<li>
-								<Link
-									to="/mycollection"
-									className={`block py-2 px-3 ${
-										isDarkMode ? "text-white" : "text-gray-900"
-									} rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
-								>
-									My Collections
-								</Link>
-							</li>
-							<li>
-								<Link
-									to="/services"
-									className={`block py-2 px-3 ${
-										isDarkMode ? "text-white" : "text-gray-900"
-									} rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
-								>
-									Services
-								</Link>
-							</li>
-							{/* Log In/Log Out button for mobile */}
-							<li className="block md:hidden">
 								{isLoggedIn ? (
-									<button
-										onClick={handleLogout}
-										className={`block py-2 px-3 ${
-											isDarkMode ? "text-white" : "text-gray-900"
-										} rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
+									<div
+										className="relative"
+										ref={dropdownRef}
 									>
-										Log Out
-									</button>
+										<span
+											className="w-10 h-10 rounded-full cursor-pointer bg-cyan-600"
+											onClick={toggleDropdown}
+										>
+											<FaRegUser className=" w-10 h-10 items-center p-2 justify-center text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" />
+										</span>
+										<div
+											id="userDropdown"
+											className={`absolute right-0 mt-2 z-50 ${
+												isDropdownOpen ? "block" : "hidden"
+											} bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600`}
+										>
+											<div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+												{userData ? (
+													<>
+														<div>
+															{userData.firstName} {userData.lastName}
+														</div>
+														<div className="font-medium truncate">
+															{userData.email}
+														</div>
+													</>
+												) : (
+													<div>Loading...</div>
+												)}
+											</div>
+											<ul
+												className="py-2 text-sm text-gray-700 dark:text-gray-200"
+												aria-labelledby="avatarButton"
+											>
+												<li>
+													<Link
+														to="/"
+														className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+														onClick={handleDropdownItemClick}
+													>
+														Home
+													</Link>
+												</li>
+												<li>
+													<Link
+														to="/mycollection"
+														className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+														onClick={handleDropdownItemClick}
+													>
+														My Collections
+													</Link>
+												</li>
+												<li>
+													<Link
+														to="/services"
+														className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+														onClick={handleDropdownItemClick}
+													>
+														Services
+													</Link>
+												</li>
+											</ul>
+											<div className="py-1">
+												<a
+													onClick={handleLogout}
+													href="/"
+													className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white cursor-pointer"
+												>
+													Log out
+												</a>
+											</div>
+										</div>
+									</div>
 								) : (
-									<a
-										href="/SignIn"
-										className={`block py-2 px-3 ${
-											isDarkMode ? "text-white" : "text-gray-900"
-										} rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
+									<div
+										className="relative"
+										ref={dropdownRef}
 									>
-										Log In
-									</a>
+										<span
+											className="w-10 h-10 rounded-full cursor-pointer bg-cyan-600"
+											onClick={toggleDropdown}
+										>
+											<FaRegUser className=" w-10 h-10 items-center p-2 justify-center text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" />
+										</span>
+										<div
+											id="userDropdown"
+											className={`absolute right-0 mt-2 z-50 ${
+												isDropdownOpen ? "block" : "hidden"
+											} bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600`}
+										>
+											<div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+												<div>Please Log in</div>
+											</div>
+											<ul
+												className="py-2 text-sm text-gray-700 dark:text-gray-200"
+												aria-labelledby="avatarButton"
+											>
+												<li>
+													<Link
+														to="/"
+														className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+														onClick={handleDropdownItemClick}
+													>
+														Home
+													</Link>
+												</li>
+											</ul>
+											<div className="py-1">
+												<a
+													onClick={handleLogout}
+													href="/signin"
+													className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white cursor-pointer"
+												>
+													Log in
+												</a>
+											</div>
+										</div>
+									</div>
 								)}
 							</li>
 						</ul>
 					</nav>
 				</div>
-				{/* Search input, Theme button, Log In button */}
-				<div className="flex md:order-2">
-					{/* Search input in desktop size */}
-					<div className="relative hidden md:block">
-						<div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-							<FaSearch
-								className="w-4 h-4 text-gray-500 dark:text-gray-400"
-								aria-hidden="true"
-							/>
-							<span className="sr-only">Search icon</span>
-						</div>
-
-						<input
-							type="text"
-							id="search-navbar"
-							className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-							placeholder="Search..."
-						/>
-					</div>
-
-					{/* Theme button in desktop size */}
-					<button
-						type="button"
-						onClick={toggleDarkMode}
-						className="relative hidden md:block items-center p-2 ml-5 -mr-5 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-					>
-						<span className="sr-only">Toggle Dark Mode</span>
-						{isDarkMode ? (
-							<svg
-								className="w-6 h-6"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-								xmlns="http://www.w3.org/2000/svg"
-							>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth="2"
-									d="M12 3v1m4.22 1.22l.78-.78M21 12h-1m-4.22 4.22l-.78.78M12 21v-1m-4.22-1.22l-.78-.78M3 12H2m4.22-4.22l-.78-.78M12 2a10 10 0 100 20 10 10 0 000-20z"
-								/>
-							</svg>
-						) : (
-							<svg
-								className="w-6 h-6"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-								xmlns="http://www.w3.org/2000/svg"
-							>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth="2"
-									d="M20.354 15.354A9 9 0 018.647 3.647 9 9 0 1020.354 15.354z"
-								/>
-							</svg>
-						)}
-					</button>
-
-					{/* Log In button */}
-					<ul className="hidden md:block md:order-2 w-full pt-2 ps-10 text-sm">
-						<li>
-							{isLoggedIn ? (
-								<a
-									href="/signin"
-									onClick={handleLogout}
-									className="text-[15px] text-white bg-blue-500 hover:bg-blue-600 rounded-lg p-[10px]"
-								>
-									Log out
-								</a>
-							) : (
-								<a
-									href="/signin"
-									className="text-[15px] text-white bg-blue-500 hover:bg-blue-600 rounded-lg p-[10px]"
-								>
-									Log In
-								</a>
-							)}
-
-							{/*<a href="/signin" className="text-[15px] text-white bg-blue-500 hover:bg-blue-600 rounded-lg p-[10px]">
-					 Log In
- </a>*/}
-						</li>
-					</ul>
-				</div>
+				
 			</div>
 		</nav>
 	);
