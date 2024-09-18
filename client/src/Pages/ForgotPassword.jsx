@@ -10,7 +10,7 @@ const ForgotPassword = () => {
   const sendCode = async (e) => {
     e.preventDefault();
     try {
-      await axios.get(`https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Accounts/send-code?email=${email}`);
+      await axios.post(`https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Accounts/send-code?email=${email}`);
       setStep(2);
     } catch (err) {
       setError('Email not found or failed to send code.');
@@ -20,7 +20,7 @@ const ForgotPassword = () => {
   const verifyCode = async (e) => {
     e.preventDefault();
     try {
-      await axios.get(`https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Accounts/verify?email=${email}&code=${code}`);
+      await axios.post(`https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Accounts/verify?email=${email}&code=${code}`);
       window.location.href = `/reset-password?email=${email}`; // Navigate to reset password page
     } catch (err) {
       setError('Invalid code.');
