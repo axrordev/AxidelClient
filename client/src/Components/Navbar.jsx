@@ -7,6 +7,8 @@ const Navbar = () => {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [userData, setUserData] = useState(null);
+
   const dropdownRef = useRef(null); // Ref for the dropdown
 
   const toggleDarkMode = () => {
@@ -22,30 +24,27 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("token"); // Tokenni o'chirish
     setIsLoggedIn(false);
+    setUserData(null);
     window.location.reload(); // Sahifani yangilash
+  };
+
+	const handleDropdownItemClick = () => {
+    setIsDropdownOpen(false); // Element bosilganda dropdown yopiladi
   };
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen); // Dropdownni ko'rsatish yoki yashirish
   };
 
-  // Click qilinganda dropdown ni yopish
-  const handleDropdownItemClick = () => {
-    setIsDropdownOpen(false); // Element bosilganda dropdown yopiladi
-  };
-
-  // Close dropdown when clicking outside of it
+  // Dropdownni tashqi hududga bosilganda yopish
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
       }
     };
-
-    // Attach the event listener
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      // Clean up the event listener when component unmounts
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [dropdownRef]);
@@ -58,6 +57,22 @@ const Navbar = () => {
     const token = localStorage.getItem("token");
     if (token) {
       setIsLoggedIn(true);
+
+      // Foydalanuvchi ma'lumotlarini olish
+      fetch("https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Users", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data && data.data) {
+            setUserData(data.data);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
     }
   }, []);
 
@@ -88,13 +103,12 @@ const Navbar = () => {
             <span className="sr-only">Search</span>
           </button>
 
-          {/* Search input in desktop size */}
+          {/* Search input for desktop */}
           <div className="relative hidden md:block">
             <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
               <FaSearch className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" />
               <span className="sr-only">Search icon</span>
             </div>
-
             <input
               type="text"
               id="search-navbar"
@@ -137,8 +151,14 @@ const Navbar = () => {
                         } bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600`}
                       >
                         <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
-                          <div>Bonnie Green</div>
-                          <div className="font-medium truncate">name@flowbite.com</div>
+                          {userData ? (
+                            <>
+                              <div>{userData.firstName} {userData.lastName}</div>
+                              <div className="font-medium truncate">{userData.email}</div>
+                            </>
+                          ) : (
+                            <div>Loading...</div>
+                          )}
                         </div>
                         <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
                           <li>
@@ -159,39 +179,19 @@ const Navbar = () => {
                         </ul>
                         <div className="py-1">
                           <a
-                            href="/"
-                            onClick={() => {
-                              handleLogout();
-                              handleDropdownItemClick();
-                            }}
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                            onClick={handleLogout}
+														href="/"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white cursor-pointer"
                           >
-                            Sign out
+                            Log out
                           </a>
                         </div>
                       </div>
                     </div>
                   ) : (
-                    <div className="relative" ref={dropdownRef}>
-                      <span className="w-10 h-10 rounded-full cursor-pointer bg-cyan-600" onClick={toggleDropdown}>
-                        <FaRegUser className="w-10 h-10 items-center p-2 justify-center text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" />
-                      </span>
-                      <div
-                        id="userDropdown"
-                        className={`absolute right-0 mt-2 z-50 ${
-                          isDropdownOpen ? "block" : "hidden"
-                        } bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600`}
-                      >
-                        <div className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
-                          <Link to="/signin" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onClick={handleDropdownItemClick}>
-                            Sign in
-                          </Link>
-                          <Link to="/signup" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onClick={handleDropdownItemClick}>
-                            Sign up
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
+                    <Link to="/login" className="btn btn-primary">
+                      Login
+                    </Link>
                   )}
                 </li>
               </ul>
