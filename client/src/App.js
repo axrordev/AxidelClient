@@ -8,6 +8,8 @@ import HomePage from './Components/HomePage';
 import MyCollection from './Components/MyCollectionPage';
 import ServicesPage from './Components/ServicesPage';
 import ItemPage from './Components/ItemPage';
+import ForgotPassword from './Pages/ForgotPassword';
+import ResetPassword from './Pages/ResetPassword';
 
 const App = () => {
   return (
@@ -23,6 +25,8 @@ const App = () => {
         <Route path="/signin" element={<SignInPage />} />
         <Route path="/register-verify" element={<RegisterVerifyPage />} />
         <Route path="/signup" element={<SignUpPage />} />
+				<Route path="/ForgotPassword" element={<ForgotPassword />} />
+				<Route path="/ResetPassword" element={<ResetPassword />} />
       </Routes>
     </Router>
   );

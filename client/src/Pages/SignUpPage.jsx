@@ -111,7 +111,7 @@ const SignUpPage = () => {
                   type={showPassword ? 'text' : 'password'}
                   name="password"
                   id="password"
-                  className="flex-1 p-2 pr-10 border border-gray-300 focus:outline-none focus:ring-0 focus:border-gray-300 rounded text-sm text-gray-900"
+                  className="flex-1 p-2 border border-gray-300 focus:outline-none focus:ring-0 focus:border-gray-300 rounded text-sm text-gray-900"
                   placeholder="Enter your password"
                   value={formData.password}
                   onChange={handleInputChange}
@@ -142,7 +142,7 @@ const SignUpPage = () => {
                   type={showConfirmPassword ? 'text' : 'password'}
                   name="confirmPassword"
                   id="confirmPassword"
-                  className="flex-1 p-2 pr-10 border border-gray-300 focus:outline-none focus:ring-0 focus:border-gray-300 rounded text-sm text-gray-900"
+                  className="flex-1 p-2 border border-gray-300 focus:outline-none focus:ring-0 focus:border-gray-300 rounded text-sm text-gray-900"
                   placeholder="Confirm your password"
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
