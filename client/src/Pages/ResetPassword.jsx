@@ -18,7 +18,7 @@ const ResetPassword = () => {
         }
       });
       alert('Password reset successful');
-      window.location.href = '/login'; // Redirect to login page
+      window.location.href = '/signin'; // Redirect to login page
     } catch (err) {
       setError('Failed to reset password.');
     }

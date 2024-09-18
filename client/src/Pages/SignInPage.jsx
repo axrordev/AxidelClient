@@ -86,7 +86,7 @@ const SignInPage = () => {
 							/>
 						</div>
 
-						<div className="flex flex-col mt-4 my-8">
+						<div className="flex flex-col mt-4 ">
 							<label
 								htmlFor="password"
 								className="text-gray-700"
@@ -148,15 +148,14 @@ const SignInPage = () => {
 								</button>
 							</div>
 						</div>
-						<p className="text-center text-sm text-gray-600 mt-2">
-							Don't have an account?{" "}
+						<div className="text-sm text-gray-600 mb-8">
 							<a
 								href="/forgot-password"
 								className="text-blue-600 hover:text-blue-700 hover:underline"
 							>
-								Forget password 
+								Forget password ?
 							</a>
-						</p>
+						</div>
 						<button
 							type="submit"
 							className="w-full bg-blue-600 text-white py-[10px] rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
