@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FaSearch, FaRegUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 const Navbar = () => {
 	const [isDarkMode, setIsDarkMode] = useState(false);
 	const [isSearchVisible, setIsSearchVisible] = useState(false);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Yangi state
+	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+	const [userData, setUserData] = useState(null);
+
+	const dropdownRef = useRef(null); // Ref for the dropdown
 
 	const toggleDarkMode = () => {
 		const newMode = !isDarkMode;
@@ -21,23 +25,78 @@ const Navbar = () => {
 	const handleLogout = () => {
 		localStorage.removeItem("token"); // Tokenni o'chirish
 		setIsLoggedIn(false);
+		setUserData(null);
 		window.location.reload(); // Sahifani yangilash
+	};
+
+	const handleDropdownItemClick = () => {
+		setIsDropdownOpen(false); // Element bosilganda dropdown yopiladi
 	};
 
 	const toggleDropdown = () => {
 		setIsDropdownOpen(!isDropdownOpen); // Modalni ko'rsatish yoki yashirish
 	};
 
-	useEffect(() => {
-		const savedMode = localStorage.getItem("darkMode") === "true";
-		setIsDarkMode(savedMode);
-		document.body.className = savedMode ? "dark" : "";
-
-		const token = localStorage.getItem("token");
-		if (token) {
-			setIsLoggedIn(true);
+	const getUserIdFromToken = () => {
+		const token = localStorage.getItem("token"); // Get token from local storage
+		if (!token) {
+			console.error("No token found");
+			return null;
 		}
-	}, []);
+
+		try {
+			const decodedToken = jwtDecode(token); // Decode the token
+			const userId = decodedToken.Id; // Extract the 'Id' from the decoded token
+			return userId;
+		} catch (error) {
+			console.error("Error decoding token:", error);
+			return null;
+		}
+	};
+
+		// Dropdownni tashqi hududga bosilganda yopish
+		useEffect(() => {
+			const handleClickOutside = (event) => {
+				if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+					setIsDropdownOpen(false);
+				}
+			};
+			document.addEventListener("mousedown", handleClickOutside);
+			return () => {
+				document.removeEventListener("mousedown", handleClickOutside);
+			};
+		}, [dropdownRef]);
+	
+		useEffect(() => {
+			const savedMode = localStorage.getItem("darkMode") === "true";
+			setIsDarkMode(savedMode);
+			document.body.className = savedMode ? "dark" : "";
+	
+			const token = localStorage.getItem("token");
+			if (token) {
+				setIsLoggedIn(true);
+				const userId = getUserIdFromToken(); // userIdni olamiz va fetchda foydalanamiz
+				// Foydalanuvchi ma'lumotlarini olish
+				fetch(
+					`https://axidel-ezhzgse9eyacc6e9.eastasia-01.azurewebsites.net/api/Users/${userId}`,
+					{
+						headers: {
+							Authorization: `Bearer ${token}`,
+						},
+					},
+				)
+					.then((response) => response.json())
+					.then((data) => {
+						if (data && data.data) {
+							setUserData(data.data);
+						}
+					})
+					.catch((error) => {
+						console.error("Error fetching user data:", error);
+					});
+			}
+		}, []);
+	
 
 	useEffect(() => {
 		document.body.className = isDarkMode ? "dark" : "";
@@ -60,6 +119,7 @@ const Navbar = () => {
 				</Link>
 
 				<div className="flex-1 flex items-center justify-end">
+					{/* Search button in mobile size */}
 					<button
 						type="button"
 						aria-controls="navbar-search"
@@ -141,65 +201,79 @@ const Navbar = () => {
 							>
 								<li>
 									{isLoggedIn ? (
-										<div className="relative">
-											<span
-												className="w-10 h-10 rounded-full cursor-pointer bg-cyan-600"
-												onClick={toggleDropdown}
+										<div
+										className="relative"
+										ref={dropdownRef}
+									>
+										<span
+											className="w-10 h-10 rounded-full cursor-pointer bg-cyan-600"
+											onClick={toggleDropdown}
+										>
+											<FaRegUser className=" w-10 h-10 items-center p-2 justify-center text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" />
+										</span>
+										<div
+											id="userDropdown"
+											className={`absolute right-0 mt-2 z-50 ${
+												isDropdownOpen ? "block" : "hidden"
+											} bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600`}
+										>
+											<div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+												{userData ? (
+													<>
+														<div>
+															{userData.firstName} {userData.lastName}
+														</div>
+														<div className="font-medium truncate">
+															{userData.email}
+														</div>
+													</>
+												) : (
+													<div>Loading...</div>
+												)}
+											</div>
+											<ul
+												className="py-2 text-sm text-gray-700 dark:text-gray-200"
+												aria-labelledby="avatarButton"
 											>
-												<FaRegUser className=" w-10 h-10 items-center p-2 justify-center  text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" />
-											</span>
-											<div
-												id="userDropdown"
-												className={`absolute right-0 mt-2 z-50 ${
-													isDropdownOpen ? "block" : "hidden"
-												} bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600`}
-											>
-												<div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
-													<div>Bonnie Green</div>
-													<div className="font-medium truncate">
-														name@flowbite.com
-													</div>
-												</div>
-												<ul
-													className="py-2 text-sm text-gray-700 dark:text-gray-200"
-													aria-labelledby="avatarButton"
-												>
-													<li>
-														<Link
-															to="/"
-															className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-														>
-															Home
-														</Link>
-													</li>
-													<li>
-														<Link
-															to="/mycollection"
-															className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-														>
-															My Collections
-														</Link>
-													</li>
-													<li>
-														<Link
-															to="/services"
-															className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-														>
-															Services
-														</Link>
-													</li>
-												</ul>
-												<div className="py-1">
-													<a
-														href="/"
-														onClick={handleLogout}
-														className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+												<li>
+													<Link
+														to="/"
+														className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+														onClick={handleDropdownItemClick}
 													>
-														Sign out
-													</a>
-												</div>
+														Home
+													</Link>
+												</li>
+												<li>
+													<Link
+														to="/mycollection"
+														className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+														onClick={handleDropdownItemClick}
+													>
+														My Collections
+													</Link>
+												</li>
+												<li>
+													<Link
+														to="/services"
+														className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+														onClick={handleDropdownItemClick}
+													>
+														Services
+													</Link>
+												</li>
+											</ul>
+											<div className="py-1">
+												<a
+													onClick={handleLogout}
+													href="/"
+													className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white cursor-pointer"
+												>
+													Log out
+												</a>
 											</div>
 										</div>
+									</div>
 									) : (
 										<>
 											<div className="relative">
@@ -216,7 +290,7 @@ const Navbar = () => {
 													} bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600`}
 												>
 													<div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
-														<div>Not Found</div>
+														<div>Please Log in</div>
 													</div>
 													<ul
 														className="py-2 text-sm text-gray-700 dark:text-gray-200"
@@ -226,6 +300,7 @@ const Navbar = () => {
 															<Link
 																to="/"
 																className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+																onClick={handleDropdownItemClick}
 															>
 																Home
 															</Link>
@@ -235,8 +310,18 @@ const Navbar = () => {
 														<Link
 															to="/signin"
 															className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+															onClick={handleDropdownItemClick}
 														>
 															Sign In
+														</Link>
+													</div>
+													<div className="py-1">
+														<Link
+															to="/signup"
+															className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+															onClick={handleDropdownItemClick}
+														>
+															Sign up
 														</Link>
 													</div>
 												</div>
@@ -249,7 +334,7 @@ const Navbar = () => {
 					</div>
 				</div>
 
-				{/* Search input in mobile size */}
+				{/* Search input modal in mobile size */}
 				{isSearchVisible && (
 					<div className="relative md:hidden w-full mt-4">
 						<input
@@ -261,7 +346,6 @@ const Navbar = () => {
 					</div>
 				)}
 
-				{/* ul elements in desktop and mobile size */}
 			</div>
 		</nav>
 	);
